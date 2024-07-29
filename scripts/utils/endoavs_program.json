@@ -1,0 +1,360 @@
+{
+  "version": "0.1.0",
+  "name": "endoavs_program",
+  "instructions": [
+    {
+      "name": "create",
+      "accounts": [
+        {
+          "name": "endoAvs",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "avsTokenMint",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "avsTokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "delegatedTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "delegatedTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "delegate",
+      "accounts": [
+        {
+          "name": "staker",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "endoAvs",
+          "isMut": false,
+          "isSigner": false,
+          "relations": [
+            "avs_token_mint",
+            "delegated_token_mint",
+            "delegated_token_vault"
+          ]
+        },
+        {
+          "name": "avsTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "delegatedTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "delegatedTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "stakerDelegatedTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakerAvsTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "undelegate",
+      "accounts": [
+        {
+          "name": "staker",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "endoAvs",
+          "isMut": false,
+          "isSigner": false,
+          "relations": [
+            "avs_token_mint",
+            "delegated_token_mint",
+            "delegated_token_vault"
+          ]
+        },
+        {
+          "name": "avsTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "delegatedTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "delegatedTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "stakerDelegatedTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "stakerAvsTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "transferAuthority",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "endoAvs",
+          "isMut": false,
+          "isSigner": false,
+          "relations": [
+            "authority",
+            "avs_token_mint"
+          ]
+        },
+        {
+          "name": "newAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "avsTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "setAvsTokenMetadata",
+      "accounts": [
+        {
+          "name": "endoAvs",
+          "isMut": false,
+          "isSigner": false,
+          "relations": [
+            "avs_token_mint"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "avsTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "avsTokenMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMetadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "EndoAVS",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "avsTokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "delegatedTokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "delegatedTokenVault",
+            "type": "publicKey"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "UnsupportedAsset",
+      "msg": "Unsupported Asset"
+    },
+    {
+      "code": 6001,
+      "name": "NameTooLong",
+      "msg": "The chosen name is too long"
+    }
+  ],
+  "metadata": {
+    "address": "61XekENj7BjViMaVwBRQXEGmFH498kid61cABHDAkmMi"
+  }
+}
