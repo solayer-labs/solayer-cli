@@ -1,20 +1,27 @@
-import { SystemProgram, PublicKey, Keypair } from "@solana/web3.js";
+import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import { Metaplex } from "@metaplex-foundation/js";
 import * as helper from "../utils/helpers";
 import { METADATA_PROGRAM_ID, PDA_SEED, PROGRAM_ID } from "../utils/constants";
+import { readFileSync } from "fs";
 
 export async function updateMetadata(
+  providerUrl: string,
+  keyPairPath: string,
   name: string,
   symbol: string,
   uri: string,
   avsTokenMintAddress: string
 ) {
-  anchor.setProvider(anchor.AnchorProvider.env());
-  const provider = anchor.getProvider();
-  const connection = provider.connection;
-  const keypair = anchor.AnchorProvider.env().wallet as anchor.Wallet;
+  const connection = new Connection(providerUrl, "confirmed");
+  const keypair = new anchor.Wallet(
+    Keypair.fromSecretKey(
+      new Uint8Array(JSON.parse(readFileSync(keyPairPath).toString()))
+    )
+  );
+  const provider = new anchor.AnchorProvider(connection, keypair, {});
+  anchor.setProvider(provider);
   const metaplex = new Metaplex(connection);
   const endoavsProgram = new anchor.Program(
     endoavsProgramIDL as anchor.Idl,

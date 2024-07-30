@@ -1,4 +1,4 @@
-import { SystemProgram, PublicKey, Keypair } from "@solana/web3.js";
+import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import {
@@ -17,13 +17,19 @@ import {
 import { readFileSync } from "fs";
 
 export async function createAvs(
+  providerUrl: string,
+  keyPairPath: string,
   avsName: string,
   avsTokenMintKeyPairPath: string
 ) {
-  anchor.setProvider(anchor.AnchorProvider.env());
-  const provider = anchor.getProvider();
-  const connection = provider.connection;
-  const keypair = anchor.AnchorProvider.env().wallet as anchor.Wallet;
+  const connection = new Connection(providerUrl, "confirmed");
+  const keypair = new anchor.Wallet(
+    Keypair.fromSecretKey(
+      new Uint8Array(JSON.parse(readFileSync(keyPairPath).toString()))
+    )
+  );
+  const provider = new anchor.AnchorProvider(connection, keypair, {});
+  anchor.setProvider(provider);
   const metaplex = new Metaplex(connection);
   const endoavsProgram = new anchor.Program(
     endoavsProgramIDL as anchor.Idl,
