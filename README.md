@@ -14,15 +14,7 @@ yarn install
 
 ## Configuration
 
-Create a .env file in the root directory with the following fields:
-
-```
-ANCHOR_WALLET=/path/to/your/keypair/id.json
-ANCHOR_PROVIDER_URL=https://your-rpc-provider-url.com
-```
-
-- ANCHOR_WALLET: File path to your Solana keypair (usually id.json)
-- ANCHOR_PROVIDER_URL: RPC provider URL for Anchor to send transactions E.g. Alchemy/Quicknode/Helius
+By default, the script will use the same provider and key pair as specified by "solana config get". You can overwrite it by specifying "-k \<path-to-wallet-json-file\>" and "-p \<provider-url\>"
 
 ## Usage
 
