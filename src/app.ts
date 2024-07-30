@@ -40,42 +40,42 @@ program
   .command("create <avsName> <avsTokenMintKeyPairPath>")
   .description("Create a new endoAvs")
   .action(async (avsName, avsTokenMintKeyPairPath) => {
-    await createAvs(avsName, avsTokenMintKeyPairPath);
+    await createAvs(rpcUrl, keypairPath, avsName, avsTokenMintKeyPairPath);
   });
 
 program
   .command("delegate <numberOfSOL> <avsTokenMintAddress>")
   .description("Delegate SOL to endoAvs")
   .action(async (numberOfSOL, avsTokenMintAddress) => {
-    await delegate(numberOfSOL, avsTokenMintAddress);
+    await delegate(rpcUrl, keypairPath, numberOfSOL, avsTokenMintAddress);
   });
 
 program
   .command("undelegate <numberOfSOL> <avsTokenMintAddress>")
   .description("Undelegate SOL to endoAvs")
   .action(async (numberOfSOL, avsTokenMintAddress) => {
-    await undelegate(numberOfSOL, avsTokenMintAddress);
+    await undelegate(rpcUrl, keypairPath, numberOfSOL, avsTokenMintAddress);
   });
 
 program
   .command("transferAuthority <newAuthorityAddr> <avsTokenMintAddress>")
   .description("Transfer authority to a new address")
   .action(async (newAuthorityAddr, avsTokenMintAddress) => {
-    await transferAuthority(newAuthorityAddr, avsTokenMintAddress);
+    await transferAuthority(rpcUrl, keypairPath, newAuthorityAddr, avsTokenMintAddress);
   });
 
 program
   .command("updateAvs <newName> <newUrl> <avsTokenMintAddress>")
   .description("Update an existing endoAvs")
   .action(async (newName, newUrl, avsTokenMintAddress) => {
-    await updateAvs(newName, newUrl, avsTokenMintAddress);
+    await updateAvs(rpcUrl, keypairPath, newName, newUrl, avsTokenMintAddress);
   });
 
 program
   .command("updateMetadata <name> <symbol> <uri> <avsTokenMintAddress>")
   .description("Update the metadata of the endoAvs token")
   .action(async (name, symbol, uri, avsTokenMintAddress) => {
-    await updateMetadata(name, symbol, uri, avsTokenMintAddress);
+    await updateMetadata(rpcUrl, keypairPath, name, symbol, uri, avsTokenMintAddress);
   });
 
 program.parse(process.argv);

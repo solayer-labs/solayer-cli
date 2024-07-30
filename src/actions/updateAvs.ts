@@ -1,12 +1,25 @@
-import { SystemProgram, PublicKey, Keypair } from "@solana/web3.js";
+import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import * as helper from "../utils/helpers";
 import { PDA_SEED, PROGRAM_ID } from "../utils/constants";
+import { readFileSync } from "fs";
 
-export async function updateAvs(newName: string, newURL: string, avsTokenMintAddress: string) {
-  anchor.setProvider(anchor.AnchorProvider.env());
-  const keypair = anchor.AnchorProvider.env().wallet as anchor.Wallet;
+export async function updateAvs(
+  providerUrl: string,
+  keyPairPath: string,
+  newName: string,
+  newURL: string,
+  avsTokenMintAddress: string
+) {
+  const connection = new Connection(providerUrl, "confirmed");
+  const keypair = new anchor.Wallet(
+    Keypair.fromSecretKey(
+      new Uint8Array(JSON.parse(readFileSync(keyPairPath).toString()))
+    )
+  );
+  const provider = new anchor.AnchorProvider(connection, keypair, {});
+  anchor.setProvider(provider);
   const endoavsProgram = new anchor.Program(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID

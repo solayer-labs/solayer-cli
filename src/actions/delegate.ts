@@ -3,6 +3,7 @@ import {
   PublicKey,
   Keypair,
   LAMPORTS_PER_SOL,
+  Connection,
 } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
@@ -18,10 +19,22 @@ import {
   PDA_SEED,
   PROGRAM_ID,
 } from "../utils/constants";
+import { readFileSync } from "fs";
 
-export async function delegate(numberOfSOL: number, avsTokenMintAddress: string) {
-  anchor.setProvider(anchor.AnchorProvider.env());
-  const keypair = anchor.AnchorProvider.env().wallet as anchor.Wallet;
+export async function delegate(
+  providerUrl: string,
+  keyPairPath: string,
+  numberOfSOL: number,
+  avsTokenMintAddress: string
+) {
+  const connection = new Connection(providerUrl, "confirmed");
+  const keypair = new anchor.Wallet(
+    Keypair.fromSecretKey(
+      new Uint8Array(JSON.parse(readFileSync(keyPairPath).toString()))
+    )
+  );
+  const provider = new anchor.AnchorProvider(connection, keypair, {});
+  anchor.setProvider(provider);
   const endoavsProgram = new anchor.Program(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
@@ -68,9 +81,20 @@ export async function delegate(numberOfSOL: number, avsTokenMintAddress: string)
   }
 }
 
-export async function undelegate(numberOfSOL: number, avsTokenMintAddress: string) {
-  anchor.setProvider(anchor.AnchorProvider.env());
-  const keypair = anchor.AnchorProvider.env().wallet as anchor.Wallet;
+export async function undelegate(
+  providerUrl: string,
+  keyPairPath: string,
+  numberOfSOL: number,
+  avsTokenMintAddress: string
+) {
+  const connection = new Connection(providerUrl, "confirmed");
+  const keypair = new anchor.Wallet(
+    Keypair.fromSecretKey(
+      new Uint8Array(JSON.parse(readFileSync(keyPairPath).toString()))
+    )
+  );
+  const provider = new anchor.AnchorProvider(connection, keypair, {});
+  anchor.setProvider(provider);
   const endoavsProgram = new anchor.Program(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
