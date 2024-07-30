@@ -20,12 +20,13 @@ import {
   PROGRAM_ID,
 } from "../utils/constants";
 import { readFileSync } from "fs";
+import { EndoAvs } from "../utils/type";
 
 export async function delegate(
   providerUrl: string,
   keyPairPath: string,
   numberOfSOL: number,
-  avsTokenMintAddress: string
+  endoAvsAddress: string
 ) {
   const connection = new Connection(providerUrl, "confirmed");
   const keypair = new anchor.Wallet(
@@ -39,25 +40,20 @@ export async function delegate(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
   );
-  const avsTokenMintPublicKey = new PublicKey(avsTokenMintAddress);
-  const endoavs = PublicKey.findProgramAddressSync(
-    [Buffer.from(PDA_SEED), avsTokenMintPublicKey.toBuffer()],
-    endoavsProgram.programId
-  )[0];
+  const endoAvsPublicKey = new PublicKey(endoAvsAddress);
+  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
+  const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
+  const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
     await endoavsProgram.methods
       .delegate(new BN(numberOfSOL * LAMPORTS_PER_SOL))
       .accounts({
         staker: keypair.publicKey,
-        endoAvs: endoavs,
+        endoAvs: endoAvsPublicKey,
         avsTokenMint: avsTokenMintPublicKey,
-        delegatedTokenVault: getAssociatedTokenAddressSync(
-          DELEGATED_TOKEN_MINT_ID,
-          endoavs,
-          true
-        ),
-        delegatedTokenMint: DELEGATED_TOKEN_MINT_ID,
+        delegatedTokenVault: endoAvsObj.delegatedTokenVault,
+        delegatedTokenMint: endoAvsObj.delegatedTokenMint,
         stakerDelegatedTokenAccount: getAssociatedTokenAddressSync(
           DELEGATED_TOKEN_MINT_ID,
           keypair.publicKey,
@@ -85,7 +81,7 @@ export async function undelegate(
   providerUrl: string,
   keyPairPath: string,
   numberOfSOL: number,
-  avsTokenMintAddress: string
+  endoAvsAddress: string
 ) {
   const connection = new Connection(providerUrl, "confirmed");
   const keypair = new anchor.Wallet(
@@ -99,25 +95,20 @@ export async function undelegate(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
   );
-  const avsTokenMintPublicKey = new PublicKey(avsTokenMintAddress);
-  const endoavs = PublicKey.findProgramAddressSync(
-    [Buffer.from(PDA_SEED), avsTokenMintPublicKey.toBuffer()],
-    endoavsProgram.programId
-  )[0];
+  const endoAvsPublicKey = new PublicKey(endoAvsAddress);
+  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
+  const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
+  const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
     await endoavsProgram.methods
       .undelegate(new BN(numberOfSOL * LAMPORTS_PER_SOL))
       .accounts({
         staker: keypair.publicKey,
-        endoAvs: endoavs,
+        endoAvs: endoAvsPublicKey,
         avsTokenMint: avsTokenMintPublicKey,
-        delegatedTokenVault: getAssociatedTokenAddressSync(
-          DELEGATED_TOKEN_MINT_ID,
-          endoavs,
-          true
-        ),
-        delegatedTokenMint: DELEGATED_TOKEN_MINT_ID,
+        delegatedTokenVault: endoAvsObj.delegatedTokenVault,
+        delegatedTokenMint: endoAvsObj.delegatedTokenMint,
         stakerDelegatedTokenAccount: getAssociatedTokenAddressSync(
           DELEGATED_TOKEN_MINT_ID,
           keypair.publicKey,
