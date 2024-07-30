@@ -17,10 +17,10 @@ program
   .addOption(new Option("-p, --provider-url <url>").env("ANCHOR_PROVIDER_URL"));
 
 program
-  .command("create <avsName>")
+  .command("create <avsName> <avsTokenMintKeyPairPath>")
   .description("Create a new endoAvs")
-  .action(async (avsName) => {
-    await createAvs(avsName);
+  .action(async (avsName, avsTokenMintKeyPairPath) => {
+    await createAvs(avsName, avsTokenMintKeyPairPath);
   });
 
 program

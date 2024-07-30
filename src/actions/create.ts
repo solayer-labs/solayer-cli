@@ -14,8 +14,12 @@ import {
   PDA_SEED,
   PROGRAM_ID,
 } from "../utils/constants";
+import { readFileSync } from "fs";
 
-export async function createAvs(avsName: string) {
+export async function createAvs(
+  avsName: string,
+  avsTokenMintKeyPairPath: string
+) {
   anchor.setProvider(anchor.AnchorProvider.env());
   const provider = anchor.getProvider();
   const connection = provider.connection;
@@ -25,7 +29,9 @@ export async function createAvs(avsName: string) {
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
   );
-  const avsTokenMint = Keypair.generate();
+  const avsTokenMint = Keypair.fromSecretKey(
+    new Uint8Array(JSON.parse(readFileSync(avsTokenMintKeyPairPath).toString()))
+  );
   const endoavs = PublicKey.findProgramAddressSync(
     [Buffer.from(PDA_SEED), avsTokenMint.publicKey.toBuffer()],
     endoavsProgram.programId
