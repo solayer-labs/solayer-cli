@@ -4,17 +4,37 @@ import { updateAvs } from "./actions/updateAvs";
 import { delegate, undelegate } from "./actions/delegate";
 import { transferAuthority } from "./actions/transferAuthority";
 import { updateMetadata } from "./actions/updateMetadata";
+import { execSync } from "child_process";
 
 const program = new Command();
+
+let rpcUrl = "https://api.mainnet-beta.solana.com";
+let keypairPath = "~/.config/solana/id.json";
+try {
+  const solanaConfig = execSync("solana config get", {
+    stdio: ["ignore", "pipe", "ignore"],
+  }).toString();
+
+  const rpcUrlMatch = solanaConfig.match(/RPC URL:\s*(.*)/);
+  const keypairPathMatch = solanaConfig.match(/Keypair Path:\s*(.*)/);
+
+  if (rpcUrlMatch) {
+    rpcUrl = rpcUrlMatch[1].trim();
+  }
+
+  if (keypairPathMatch) {
+    keypairPath = keypairPathMatch[1].trim();
+  }
+} catch (error) {}
 
 program
   .version("0.0.1")
   .description("CLI for interacting with the endoavs program");
 program
   .addOption(
-    new Option("-k, --key <path-to-wallet-json-file>").env("ANCHOR_WALLET")
+    new Option("-k, --key <path-to-wallet-json-file>").default(keypairPath)
   )
-  .addOption(new Option("-p, --provider-url <url>").env("ANCHOR_PROVIDER_URL"));
+  .addOption(new Option("-p, --provider-url <url>").default(rpcUrl));
 
 program
   .command("create <avsName> <avsTokenMintKeyPairPath>")
