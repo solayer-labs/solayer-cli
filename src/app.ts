@@ -44,38 +44,38 @@ program
   });
 
 program
-  .command("delegate <numberOfSOL> <avsTokenMintAddress>")
+  .command("delegate <numberOfSOL> <endoAvsAddress>")
   .description("Delegate SOL to endoAvs")
-  .action(async (numberOfSOL, avsTokenMintAddress) => {
-    await delegate(rpcUrl, keypairPath, numberOfSOL, avsTokenMintAddress);
+  .action(async (numberOfSOL, endoAvsAddress) => {
+    await delegate(rpcUrl, keypairPath, numberOfSOL, endoAvsAddress);
   });
 
 program
-  .command("undelegate <numberOfSOL> <avsTokenMintAddress>")
+  .command("undelegate <numberOfSOL> <endoAvsAddress>")
   .description("Undelegate SOL to endoAvs")
-  .action(async (numberOfSOL, avsTokenMintAddress) => {
-    await undelegate(rpcUrl, keypairPath, numberOfSOL, avsTokenMintAddress);
+  .action(async (numberOfSOL, endoAvsAddress) => {
+    await undelegate(rpcUrl, keypairPath, numberOfSOL, endoAvsAddress);
   });
 
 program
-  .command("transferAuthority <newAuthorityAddr> <avsTokenMintAddress>")
+  .command("transferAuthority <newAuthorityAddr> <endoAvsAddress>")
   .description("Transfer authority to a new address")
-  .action(async (newAuthorityAddr, avsTokenMintAddress) => {
-    await transferAuthority(rpcUrl, keypairPath, newAuthorityAddr, avsTokenMintAddress);
+  .action(async (newAuthorityAddr, endoAvsAddress) => {
+    await transferAuthority(rpcUrl, keypairPath, newAuthorityAddr, endoAvsAddress);
   });
 
 program
-  .command("updateAvs <newName> <newUrl> <avsTokenMintAddress>")
+  .command("updateAvs <newName> <newUrl> <endoAvsAddress>")
   .description("Update an existing endoAvs")
-  .action(async (newName, newUrl, avsTokenMintAddress) => {
-    await updateAvs(rpcUrl, keypairPath, newName, newUrl, avsTokenMintAddress);
+  .action(async (newName, newUrl, endoAvsAddress) => {
+    await updateAvs(rpcUrl, keypairPath, newName, newUrl, endoAvsAddress);
   });
 
 program
-  .command("updateMetadata <name> <symbol> <uri> <avsTokenMintAddress>")
+  .command("updateMetadata <name> <symbol> <uri> <endoAvsAddress>")
   .description("Update the metadata of the endoAvs token")
-  .action(async (name, symbol, uri, avsTokenMintAddress) => {
-    await updateMetadata(rpcUrl, keypairPath, name, symbol, uri, avsTokenMintAddress);
+  .action(async (name, symbol, uri, endoAvsAddress) => {
+    await updateMetadata(rpcUrl, keypairPath, name, symbol, uri, endoAvsAddress);
   });
 
 program.parse(process.argv);

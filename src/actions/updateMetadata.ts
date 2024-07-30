@@ -5,6 +5,7 @@ import { Metaplex } from "@metaplex-foundation/js";
 import * as helper from "../utils/helpers";
 import { METADATA_PROGRAM_ID, PDA_SEED, PROGRAM_ID } from "../utils/constants";
 import { readFileSync } from "fs";
+import { EndoAvs } from "../utils/type";
 
 export async function updateMetadata(
   providerUrl: string,
@@ -12,7 +13,7 @@ export async function updateMetadata(
   name: string,
   symbol: string,
   uri: string,
-  avsTokenMintAddress: string
+  endoAvsAddress: string
 ) {
   const connection = new Connection(providerUrl, "confirmed");
   const keypair = new anchor.Wallet(
@@ -27,17 +28,17 @@ export async function updateMetadata(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
   );
-  const avsTokenMintPublicKey = new PublicKey(avsTokenMintAddress);
-  const endo_avs = PublicKey.findProgramAddressSync(
-    [Buffer.from(PDA_SEED), avsTokenMintPublicKey.toBuffer()],
-    endoavsProgram.programId
-  )[0];
+
+  const endoAvsPublicKey = new PublicKey(endoAvsAddress);
+  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
+  const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
+  const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
     await endoavsProgram.methods
       .setAvsTokenMetadata(name, symbol, uri)
       .accounts({
-        endo_avs: endo_avs,
+        endo_avs: endoAvsPublicKey,
         authority: keypair.publicKey,
         avsTokenMint: avsTokenMintPublicKey,
         avsTokenMetadata: metaplex
