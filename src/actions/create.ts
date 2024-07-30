@@ -42,7 +42,7 @@ export async function createAvs(
       .create(avsName)
       .accounts({
         endoAvs: endoavs,
-        authority: ASSOCIATED_TOKEN_PROGRAM_ID,
+        authority: endoavsProgram.programId,
         avsTokenMint: avsTokenMint.publicKey,
         avsTokenMetadata: metaplex
           .nfts()
