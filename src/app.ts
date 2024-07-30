@@ -32,9 +32,9 @@ program
   .description("CLI for interacting with the endoavs program");
 program
   .addOption(
-    new Option("-k, --key <path-to-wallet-json-file>").default(keypairPath)
+    new Option("-k, --keypair <path-to-wallet-json-file>").default(keypairPath)
   )
-  .addOption(new Option("-p, --provider-url <url>").default(rpcUrl));
+  .addOption(new Option("-u, --url <url>").default(rpcUrl));
 
 program
   .command("create <avsName> <avsTokenMintKeyPairPath>")

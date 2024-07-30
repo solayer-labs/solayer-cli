@@ -14,7 +14,7 @@ yarn install
 
 ## Configuration
 
-By default, the script will use the same provider and key pair as specified by "solana config get". You can overwrite it by specifying "-k \<path-to-wallet-json-file\>" and "-p \<provider-url\>"
+By default, the script will use the same provider and key pair as specified by "solana config get". You can overwrite it by specifying "-k \<path-to-wallet-json-file\>" and "-u \<provider-url\>"
 
 ## Usage
 
