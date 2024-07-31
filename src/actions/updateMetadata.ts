@@ -1,4 +1,4 @@
-import { ComputeBudgetProgram, SystemProgram, PublicKey, Keypair, Connection, sendAndConfirmTransaction } from "@solana/web3.js";
+import { Transaction, ComputeBudgetProgram, SystemProgram, PublicKey, Keypair, Connection, sendAndConfirmTransaction } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import { Metaplex } from "@metaplex-foundation/js";
@@ -34,8 +34,21 @@ export async function updateMetadata(
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
+
+  console.log("provider url", providerUrl);
+
   try {
-    const tx = await endoavsProgram.methods
+    const tx = new Transaction;
+    tx.add(
+      ComputeBudgetProgram.setComputeUnitLimit({ 
+        units: 1000000 
+      }),      
+      ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: 160000,
+      }),      
+    );
+    
+    const updateTx = await endoavsProgram.methods
       .updateTokenMetadata(name, symbol, uri)
       .accounts({
         endoAvs: endoAvsPublicKey,
@@ -52,14 +65,9 @@ export async function updateMetadata(
       .signers([keypair.payer])
       .transaction();
 
-    tx.add(
-      ComputeBudgetProgram.setComputeUnitLimit({
-        units: 1000000,
-      }),
-      ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: 60000,
-      })
-    )
+    tx.add(updateTx);    
+    console.log("sig:", tx.signature)
+    
     await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(helper.log);
   } catch (error) {
     console.error("Error setting metadata:", error);
