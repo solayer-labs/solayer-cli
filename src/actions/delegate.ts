@@ -41,9 +41,14 @@ export async function delegate(
     PROGRAM_ID
   );
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
+  console.log("endoavsPublicKey " + endoAvsPublicKey.toString());
   const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
+  console.log("fetched endoavsProgram: ");
+  console.log(endoavsInfo);
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
+  console.log(endoAvsObj);
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
+  console.log("Start delegate");
 
   try {
     await endoavsProgram.methods
@@ -52,8 +57,12 @@ export async function delegate(
         staker: keypair.publicKey,
         endoAvs: endoAvsPublicKey,
         avsTokenMint: avsTokenMintPublicKey,
-        delegatedTokenVault: endoAvsObj.delegatedTokenVault,
-        delegatedTokenMint: endoAvsObj.delegatedTokenMint,
+        delegatedTokenVault: getAssociatedTokenAddressSync(
+          DELEGATED_TOKEN_MINT_ID,
+          endoAvsPublicKey,
+          true
+        ),
+        delegatedTokenMint: DELEGATED_TOKEN_MINT_ID,
         stakerDelegatedTokenAccount: getAssociatedTokenAddressSync(
           DELEGATED_TOKEN_MINT_ID,
           keypair.publicKey,

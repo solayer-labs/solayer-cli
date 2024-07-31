@@ -42,13 +42,17 @@ export async function createAvs(
     [Buffer.from(PDA_SEED), avsTokenMint.publicKey.toBuffer()],
     endoavsProgram.programId
   )[0];
+  console.log("Endoavs address: " + endoavs);
+  console.log("Endoavs program: " + PROGRAM_ID.toString());
+  console.log("AvsTokenMint: " + avsTokenMint.toString());
+  // TODO: EndoAVS Program not deployed - 61XekENj7BjViMaVwBRQXEGmFH498kid61cABHDAkmMi failed: invalid account data for instruction
 
   try {
     await endoavsProgram.methods
       .create(avsName)
       .accounts({
         endoAvs: endoavs,
-        authority: endoavsProgram.programId,
+        authority: keypair.publicKey,
         avsTokenMint: avsTokenMint.publicKey,
         avsTokenMetadata: metaplex
           .nfts()
