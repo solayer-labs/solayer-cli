@@ -1,4 +1,12 @@
-import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
+import {
+  SystemProgram,
+  PublicKey,
+  Keypair,
+  Connection,
+  Transaction,
+  ComputeBudgetProgram,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import * as helper from "../utils/helpers";
@@ -27,11 +35,22 @@ export async function updateAvs(
   );
 
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
-  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
+  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(
+    endoAvsPublicKey
+  );
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
-  await endoavsProgram.methods
+  const tx = new Transaction().add(
+    ComputeBudgetProgram.setComputeUnitLimit({
+      units: 1_000_000,
+    }),
+    ComputeBudgetProgram.setComputeUnitPrice({
+      microLamports: 100_000,
+    })
+  );
+
+  const updateTx = await endoavsProgram.methods
     .updateEndoavs(newName, newURL)
     .accounts({
       authority: keypair.publicKey,
@@ -40,8 +59,12 @@ export async function updateAvs(
       systemProgram: SystemProgram.programId,
     })
     .signers([keypair.payer])
-    .rpc()
-    .then(helper.log);
+    .transaction();
+
+  tx.add(updateTx);
+  await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(
+    helper.log
+  );
 
   const update_endoavs_info = await endoavsProgram.account.endoAvs.fetch(
     endoAvsPublicKey

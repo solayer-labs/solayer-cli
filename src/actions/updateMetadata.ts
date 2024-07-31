@@ -34,20 +34,16 @@ export async function updateMetadata(
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
-
-  console.log("provider url", providerUrl);
-
   try {
-    const tx = new Transaction;
-    tx.add(
-      ComputeBudgetProgram.setComputeUnitLimit({ 
-        units: 1000000 
-      }),      
+    const tx = new Transaction().add(
+      ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1_000_000
+      }),
       ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: 160000,
-      }),      
+        microLamports: 100_000,
+      }),
     );
-    
+
     const updateTx = await endoavsProgram.methods
       .updateTokenMetadata(name, symbol, uri)
       .accounts({
@@ -65,9 +61,7 @@ export async function updateMetadata(
       .signers([keypair.payer])
       .transaction();
 
-    tx.add(updateTx);    
-    console.log("sig:", tx.signature)
-    
+    tx.add(updateTx);
     await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(helper.log);
   } catch (error) {
     console.error("Error setting metadata:", error);

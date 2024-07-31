@@ -1,4 +1,4 @@
-import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
+import { SystemProgram, PublicKey, Keypair, Connection, Transaction, ComputeBudgetProgram, sendAndConfirmTransaction } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import {
@@ -44,7 +44,16 @@ export async function createAvs(
   )[0];
 
   try {
-    await endoavsProgram.methods
+    const tx = new Transaction().add(
+      ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1_000_000
+      }),
+      ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: 100_000,
+      }),
+    );
+
+    const createTx = await endoavsProgram.methods
       .create(avsName)
       .accounts({
         endoAvs: endoavs,
@@ -67,8 +76,10 @@ export async function createAvs(
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       })
       .signers([keypair.payer, avsTokenMint])
-      .rpc()
-      .then(helper.log);
+      .transaction();
+
+      tx.add(createTx);
+      await sendAndConfirmTransaction(connection, tx, [keypair.payer, avsTokenMint], {}).then(helper.log);
     console.log("Endogenous AVS created successfully with address: ", endoavs.toString());
   } catch (error) {
     console.error("Error creating endogenous AVS:", error);

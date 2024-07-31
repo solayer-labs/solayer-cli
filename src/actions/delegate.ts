@@ -3,7 +3,10 @@ import {
   PublicKey,
   Keypair,
   LAMPORTS_PER_SOL,
-  Connection
+  Connection,
+  sendAndConfirmTransaction,
+  Transaction,
+  ComputeBudgetProgram,
 } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
@@ -14,10 +17,7 @@ import {
 } from "@solana/spl-token";
 import BN from "bn.js";
 import * as helper from "../utils/helpers";
-import {
-  DELEGATED_TOKEN_MINT_ID,
-  PROGRAM_ID,
-} from "../utils/constants";
+import { DELEGATED_TOKEN_MINT_ID, PROGRAM_ID } from "../utils/constants";
 import { readFileSync } from "fs";
 import { EndoAvs } from "../utils/type";
 
@@ -40,12 +40,23 @@ export async function delegate(
     PROGRAM_ID
   );
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
-  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
+  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(
+    endoAvsPublicKey
+  );
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
-    await endoavsProgram.methods
+    const tx = new Transaction().add(
+      ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1_000_000,
+      }),
+      ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: 100_000,
+      })
+    );
+
+    const delegateTx = await endoavsProgram.methods
       .delegate(new BN(numberOfSOL * LAMPORTS_PER_SOL))
       .accounts({
         staker: keypair.publicKey,
@@ -73,8 +84,12 @@ export async function delegate(
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       })
       .signers([keypair.payer])
-      .rpc()
-      .then(helper.log);
+      .transaction();
+
+    tx.add(delegateTx);
+    await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(
+      helper.log
+    );
   } catch (error) {
     console.error("Error delegating:", error);
   }
@@ -99,12 +114,23 @@ export async function undelegate(
     PROGRAM_ID
   );
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
-  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
+  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(
+    endoAvsPublicKey
+  );
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
-    await endoavsProgram.methods
+    const tx = new Transaction().add(
+      ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1_000_000,
+      }),
+      ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: 100_000,
+      })
+    );
+
+    const undelegateTx = await endoavsProgram.methods
       .undelegate(new BN(numberOfSOL * LAMPORTS_PER_SOL))
       .accounts({
         staker: keypair.publicKey,
@@ -128,8 +154,12 @@ export async function undelegate(
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       })
       .signers([keypair.payer])
-      .rpc()
-      .then(helper.log);
+      .transaction();
+
+    tx.add(undelegateTx);
+    await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(
+      helper.log
+    );
   } catch (error) {
     console.error("Error undelegating:", error);
   }

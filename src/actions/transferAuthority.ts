@@ -1,4 +1,12 @@
-import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
+import {
+  SystemProgram,
+  PublicKey,
+  Keypair,
+  Connection,
+  Transaction,
+  ComputeBudgetProgram,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import * as helper from "../utils/helpers";
@@ -27,14 +35,25 @@ export async function transferAuthority(
   );
 
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
-  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
+  const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(
+    endoAvsPublicKey
+  );
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
+    const tx = new Transaction().add(
+      ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1_000_000,
+      }),
+      ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: 100_000,
+      })
+    );
+
     // This will fail unless the signer is the authority holder
     const newAuthority = new PublicKey(newAuthorityAddr);
-    await endoavsProgram.methods
+    const transferTx = await endoavsProgram.methods
       .transferAuthority()
       .accounts({
         authority: keypair.publicKey,
@@ -45,8 +64,12 @@ export async function transferAuthority(
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       })
       .signers([keypair.payer])
-      .rpc()
-      .then(helper.log);
+      .transaction();
+
+    tx.add(transferTx);
+    await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(
+      helper.log
+    );
   } catch (error) {
     console.error("Error transfering authority:", error);
   }

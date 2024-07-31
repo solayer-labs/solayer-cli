@@ -75,7 +75,6 @@ program
   .command("updateMetadata <name> <symbol> <uri> <endoAvsAddress>")
   .description("Update the metadata of the endoAvs token")
   .action(async (name, symbol, uri, endoAvsAddress) => {
-    console.log(rpcUrl);
     await updateMetadata(rpcUrl, keypairPath, name, symbol, uri, endoAvsAddress);
   });
 
