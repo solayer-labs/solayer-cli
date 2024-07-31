@@ -2,7 +2,7 @@ import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import * as helper from "../utils/helpers";
-import { PDA_SEED, PROGRAM_ID } from "../utils/constants";
+import { PROGRAM_ID } from "../utils/constants";
 import { readFileSync } from "fs";
 import { EndoAvs } from "../utils/type";
 

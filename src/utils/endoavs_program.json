@@ -79,16 +79,11 @@
         {
           "name": "endoAvs",
           "isMut": false,
-          "isSigner": false,
-          "relations": [
-            "avs_token_mint",
-            "delegated_token_mint",
-            "delegated_token_vault"
-          ]
+          "isSigner": false
         },
         {
           "name": "avsTokenMint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -123,11 +118,6 @@
         },
         {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
           "isMut": false,
           "isSigner": false
         }
@@ -150,16 +140,11 @@
         {
           "name": "endoAvs",
           "isMut": false,
-          "isSigner": false,
-          "relations": [
-            "avs_token_mint",
-            "delegated_token_mint",
-            "delegated_token_vault"
-          ]
+          "isSigner": false
         },
         {
           "name": "avsTokenMint",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -196,11 +181,6 @@
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": [
@@ -220,7 +200,7 @@
         },
         {
           "name": "endoAvs",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "relations": [
             "authority",
@@ -241,24 +221,20 @@
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": []
     },
     {
-      "name": "setAvsTokenMetadata",
+      "name": "updateTokenMetadata",
       "accounts": [
         {
           "name": "endoAvs",
           "isMut": false,
           "isSigner": false,
           "relations": [
-            "avs_token_mint"
+            "avs_token_mint",
+            "authority"
           ]
         },
         {
@@ -306,6 +282,49 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "updateEndoavs",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "endoAvs",
+          "isMut": true,
+          "isSigner": false,
+          "relations": [
+            "authority",
+            "avs_token_mint"
+          ]
+        },
+        {
+          "name": "avsTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": {
+            "option": "string"
+          }
+        },
+        {
+          "name": "url",
+          "type": {
+            "option": "string"
+          }
+        }
+      ]
     }
   ],
   "accounts": [
@@ -314,10 +333,6 @@
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "name",
-            "type": "string"
-          },
           {
             "name": "bump",
             "type": "u8"
@@ -337,6 +352,14 @@
           {
             "name": "delegatedTokenVault",
             "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
           }
         ]
       }
@@ -352,9 +375,21 @@
       "code": 6001,
       "name": "NameTooLong",
       "msg": "The chosen name is too long"
+    },
+    {
+      "code": 6002,
+      "name": "URLTooLong",
+      "msg": "The chosen url is too long"
+    },
+    {
+      "code": 6003,
+      "name": "ConstraintViolation",
+      "msg": "One of the constraints is violated"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidTokenSymbol",
+      "msg": "The token symbol is invalid. It has to end with sSOL"
     }
-  ],
-  "metadata": {
-    "address": "61XekENj7BjViMaVwBRQXEGmFH498kid61cABHDAkmMi"
-  }
+  ]
 }

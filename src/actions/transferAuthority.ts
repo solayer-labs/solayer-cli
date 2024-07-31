@@ -2,7 +2,7 @@ import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import * as helper from "../utils/helpers";
-import { PDA_SEED, PROGRAM_ID } from "../utils/constants";
+import { PROGRAM_ID } from "../utils/constants";
 import { readFileSync } from "fs";
 import { EndoAvs } from "../utils/type";
 
@@ -38,10 +38,10 @@ export async function transferAuthority(
       .transferAuthority()
       .accounts({
         authority: keypair.publicKey,
-        endo_avs: endoAvsPublicKey,
-        new_authority: newAuthority,
-        avs_token_mint: avsTokenMintPublicKey,
-        system_program: SystemProgram.programId,
+        endoAvs: endoAvsPublicKey,
+        newAuthority: newAuthority,
+        avsTokenMint: avsTokenMintPublicKey,
+        systemProgram: SystemProgram.programId,
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       })
       .signers([keypair.payer])

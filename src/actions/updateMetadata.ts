@@ -3,7 +3,7 @@ import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import { Metaplex } from "@metaplex-foundation/js";
 import * as helper from "../utils/helpers";
-import { METADATA_PROGRAM_ID, PDA_SEED, PROGRAM_ID } from "../utils/constants";
+import { METADATA_PROGRAM_ID, PROGRAM_ID } from "../utils/constants";
 import { readFileSync } from "fs";
 import { EndoAvs } from "../utils/type";
 
@@ -36,9 +36,9 @@ export async function updateMetadata(
 
   try {
     await endoavsProgram.methods
-      .setAvsTokenMetadata(name, symbol, uri)
+      .updateTokenMetadata(name, symbol, uri)
       .accounts({
-        endo_avs: endoAvsPublicKey,
+        endoAvs: endoAvsPublicKey,
         authority: keypair.publicKey,
         avsTokenMint: avsTokenMintPublicKey,
         avsTokenMetadata: metaplex
