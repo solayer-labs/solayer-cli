@@ -40,8 +40,12 @@ export async function delegate(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
   );
+  const endoAvsTemp = PublicKey.findProgramAddressSync([Buffer.from("endo_avs"), new PublicKey("4UdVtkunKzomXwP9sRe7pz9juZLwYtiJqE6Do1coVEWN").toBuffer()], endoavsProgram.programId)[0]
+  console.log("EndoAvsTemp: " + endoAvsTemp.toString());
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
-  console.log("endoavsPublicKey " + endoAvsPublicKey.toString());
+  console.log("endoavsPublicKey: " + endoAvsPublicKey.toString());
+
+  const temp = await endoavsProgram.account.endoAvs;
   const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
   console.log("fetched endoavsProgram: ");
   console.log(endoavsInfo);

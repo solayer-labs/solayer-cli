@@ -38,10 +38,10 @@ export async function transferAuthority(
       .transferAuthority()
       .accounts({
         authority: keypair.publicKey,
-        endo_avs: endoAvsPublicKey,
-        new_authority: newAuthority,
-        avs_token_mint: avsTokenMintPublicKey,
-        system_program: SystemProgram.programId,
+        endoAvs: endoAvsPublicKey,
+        newAuthority: newAuthority,
+        avsTokenMint: avsTokenMintPublicKey,
+        systemProgram: SystemProgram.programId,
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       })
       .signers([keypair.payer])
