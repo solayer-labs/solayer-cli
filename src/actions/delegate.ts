@@ -3,7 +3,7 @@ import {
   PublicKey,
   Keypair,
   LAMPORTS_PER_SOL,
-  Connection,
+  Connection
 } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
@@ -39,8 +39,6 @@ export async function delegate(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
   );
-  const endoAvsTemp = PublicKey.findProgramAddressSync([Buffer.from("endo_avs"), new PublicKey("4UdVtkunKzomXwP9sRe7pz9juZLwYtiJqE6Do1coVEWN").toBuffer()], endoavsProgram.programId)[0]
-  console.log("EndoAvsTemp: " + endoAvsTemp.toString());
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
   const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;

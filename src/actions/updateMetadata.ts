@@ -1,4 +1,4 @@
-import { SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
+import { ComputeBudgetProgram, SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import { Metaplex } from "@metaplex-foundation/js";
@@ -35,7 +35,7 @@ export async function updateMetadata(
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
-    await endoavsProgram.methods
+    const tx = await endoavsProgram.methods
       .updateTokenMetadata(name, symbol, uri)
       .accounts({
         endoAvs: endoAvsPublicKey,
@@ -50,8 +50,19 @@ export async function updateMetadata(
         rent: anchor.web3.SYSVAR_RENT_PUBKEY,
       })
       .signers([keypair.payer])
-      .rpc()
-      .then(helper.log);
+      .transaction();
+
+    tx.add(
+      ComputeBudgetProgram.setComputeUnitLimit({
+        units: 1000000,
+      }),
+      ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: 60000,
+      })
+    )
+    console.log(tx);
+    await connection.sendTransaction(tx, [keypair.payer], {}).then(helper.log);
+
   } catch (error) {
     console.error("Error setting metadata:", error);
   }

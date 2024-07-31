@@ -39,8 +39,8 @@ export async function confirmTransaction(tx: any) {
 export async function log (signature: string): Promise<string> {
     console.log(
         `Your transaction details:
-        - https://solscan.io/tx/${signature}?cluster=devnet
-        - https://solana.fm/tx/${signature}?cluster=devnet`
+        - https://solscan.io/tx/${signature}
+        - https://solana.fm/tx/${signature}`
     );
     return signature;
 }
