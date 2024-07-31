@@ -16,7 +16,6 @@ import BN from "bn.js";
 import * as helper from "../utils/helpers";
 import {
   DELEGATED_TOKEN_MINT_ID,
-  PDA_SEED,
   PROGRAM_ID,
 } from "../utils/constants";
 import { readFileSync } from "fs";
@@ -43,16 +42,9 @@ export async function delegate(
   const endoAvsTemp = PublicKey.findProgramAddressSync([Buffer.from("endo_avs"), new PublicKey("4UdVtkunKzomXwP9sRe7pz9juZLwYtiJqE6Do1coVEWN").toBuffer()], endoavsProgram.programId)[0]
   console.log("EndoAvsTemp: " + endoAvsTemp.toString());
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
-  console.log("endoavsPublicKey: " + endoAvsPublicKey.toString());
-
-  const temp = await endoavsProgram.account.endoAvs;
   const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(endoAvsPublicKey);
-  console.log("fetched endoavsProgram: ");
-  console.log(endoavsInfo);
   const endoAvsObj = JSON.parse(JSON.stringify(endoavsInfo)) as EndoAvs;
-  console.log(endoAvsObj);
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
-  console.log("Start delegate");
 
   try {
     await endoavsProgram.methods
