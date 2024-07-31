@@ -1,4 +1,4 @@
-import { ComputeBudgetProgram, SystemProgram, PublicKey, Keypair, Connection } from "@solana/web3.js";
+import { ComputeBudgetProgram, SystemProgram, PublicKey, Keypair, Connection, sendAndConfirmTransaction } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 import endoavsProgramIDL from "../utils/endoavs_program.json";
 import { Metaplex } from "@metaplex-foundation/js";
@@ -60,9 +60,7 @@ export async function updateMetadata(
         microLamports: 60000,
       })
     )
-    console.log(tx);
-    await connection.sendTransaction(tx, [keypair.payer], {}).then(helper.log);
-
+    await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(helper.log);
   } catch (error) {
     console.error("Error setting metadata:", error);
   }
