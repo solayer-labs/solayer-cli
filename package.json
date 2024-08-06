@@ -2,7 +2,8 @@
   "name": "solayer-avs",
   "scripts": {
     "build": "npx tsc",
-    "solayerAvs": "npx ts-node ./src/app.ts"
+    "restaking": "npx ts-node ./restaking/app.ts",
+    "solayerAvs": "npx ts-node ./endoavs/app.ts"
   },
   "license": "MIT",
   "dependencies": {
