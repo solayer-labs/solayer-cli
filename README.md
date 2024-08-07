@@ -21,6 +21,32 @@ solayerAvs -k /path/to/keypair.json -u https://custom-rpc-url.com
 ```
 If not specified, the CLI will use the default Solana configuration.
 
+Here's the Usage section for the README based on the restaking folder's `app.ts` file:
+
+## Restaking
+
+The CLI tool to restake native SOL and unrestake (withdraw) sSOL into native SOL can be found in the `restaking` folder.
+
+### Restake SOL
+
+Restake native SOL:
+
+```
+solayerRestake restake <amount>
+```
+
+- `<amount>`: Amount of SOL to restake
+
+### Unrestake SOL
+
+Withdraw restaked native SOL:
+
+```
+solayerRestake unrestake <amount>
+```
+
+- `<amount>`: Amount of SOL to unrestake
+
 
 ## EndoAVS
 
