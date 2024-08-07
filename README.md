@@ -32,17 +32,27 @@ The CLI tool to restake native SOL and unrestake (withdraw) sSOL into native SOL
 Restake native SOL:
 
 ```
-solayerRestake restake <amount>
+yarn restaking restake <amount>
 ```
 
 - `<amount>`: Amount of SOL to restake
+
+### Partner Restake SOL
+
+To restake native SOL through the partner API, use the following command:
+
+```
+yarn restaking partnerRestake <amount> <referrer>
+```
+- `<amount>`: The amount of native SOL to restake
+- `<referrer>`: The partner's wallet address (referrer key) used to track referral stakes and calculate Solayer points
 
 ### Unrestake SOL
 
 Withdraw restaked native SOL:
 
 ```
-solayerRestake unrestake <amount>
+yarn restaking unrestake <amount>
 ```
 
 - `<amount>`: Amount of SOL to unrestake
@@ -57,7 +67,7 @@ The CLI tool to create and manage an endoAVS can be found in the `endoavs` folde
 Create a new endogenous AVS:
 
 ```
-solayerAvs create <avsName> <avsTokenMintKeyPairPath>
+yarn solayerAvs create <avsName> <avsTokenMintKeyPairPath>
 ```
 - `<avsName>`: Name of the new AVS
 - `<avsTokenMintKeyPairPath>`: Path to the keypair file for the AVS token mint
@@ -67,7 +77,7 @@ solayerAvs create <avsName> <avsTokenMintKeyPairPath>
 Delegate SOL to an endogenous AVS:
 
 ```
-solayerAvs delegate <numberOfSOL> <endoAvsAddress>
+yarn solayerAvs delegate <numberOfSOL> <endoAvsAddress>
 ```
 
 - `<numberOfSOL>`: Amount of SOL to delegate
@@ -78,7 +88,7 @@ solayerAvs delegate <numberOfSOL> <endoAvsAddress>
 Undelegate SOL from an endogenous AVS:
 
 ```
-solayerAvs undelegate <numberOfSOL> <endoAvsAddress>
+yarn solayerAvs undelegate <numberOfSOL> <endoAvsAddress>
 ```
 
 - `<numberOfSOL>`: Amount of SOL to undelegate
@@ -89,7 +99,7 @@ solayerAvs undelegate <numberOfSOL> <endoAvsAddress>
 Change the authority of your endoAVS:
 
 ```
-solayerAvs transferAuthority <newAuthorityAddr> <endoAvsAddress>
+yarn solayerAvs transferAuthority <newAuthorityAddr> <endoAvsAddress>
 ```
 
 - `<newAuthorityAddr>`: Address of the new authority
@@ -100,7 +110,7 @@ solayerAvs transferAuthority <newAuthorityAddr> <endoAvsAddress>
 Update the name and URL of your endoAVS:
 
 ```
-solayerAvs updateAvs <newName> <newUrl> <endoAvsAddress>
+yarn solayerAvs updateAvs <newName> <newUrl> <endoAvsAddress>
 ```
 
 - `<newName>`: New name for the AVS
@@ -112,7 +122,7 @@ solayerAvs updateAvs <newName> <newUrl> <endoAvsAddress>
 Update or set token metadata for your endoAVS:
 
 ```
-solayerAvs updateMetadata <name> <symbol> <uri> <endoAvsAddress>
+yarn solayerAvs updateMetadata <name> <symbol> <uri> <endoAvsAddress>
 ```
 
 - `<name>`: Name for the token metadata

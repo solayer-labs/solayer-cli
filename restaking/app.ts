@@ -2,6 +2,7 @@ import { Command, Option } from "commander";
 import { restake } from "./actions/restake_ssol";
 import { unrestake } from "./actions/unrestake_ssol";
 import { execSync } from "child_process";
+import { partner_restake } from "./actions/partner_restake_ssol";
 
 const program = new Command();
 
@@ -38,6 +39,13 @@ program
   .description("Restaking native SOL")
   .action(async (amount) => {
     await restake(rpcUrl, keypairPath, amount);
+  });
+
+program
+  .command("partnerRestake <amount> <referrer>")
+  .description("Restaking native SOL through partner API")
+  .action(async (amount, referrer) => {
+    await partner_restake(rpcUrl, keypairPath, amount, referrer);
   });
 
 program
