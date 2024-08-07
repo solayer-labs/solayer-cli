@@ -1,0 +1,177 @@
+{
+    "version": "0.1.0",
+    "name": "restaking_program",
+    "instructions": [
+     {
+      "name": "restake",
+      "accounts": [
+       {
+        "name": "signer",
+        "isMut": true,
+        "isSigner": true
+       },
+       {
+        "name": "solayerSigner",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "lstMint",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "lstAta",
+        "isMut": true,
+        "isSigner": false
+       },
+       {
+        "name": "rstAta",
+        "isMut": true,
+        "isSigner": false
+       },
+       {
+        "name": "rstMint",
+        "isMut": true,
+        "isSigner": false
+       },
+       {
+        "name": "vault",
+        "isMut": true,
+        "isSigner": false
+       },
+       {
+        "name": "pool",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "associatedTokenProgram",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "tokenProgram",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "systemProgram",
+        "isMut": false,
+        "isSigner": false
+       }
+      ],
+      "args": [
+       {
+        "name": "amount",
+        "type": "u64"
+       }
+      ]
+     },
+     {
+      "name": "unrestake",
+      "accounts": [
+       {
+        "name": "signer",
+        "isMut": true,
+        "isSigner": true
+       },
+       {
+        "name": "solayerSigner",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "lstMint",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "lstAta",
+        "isMut": true,
+        "isSigner": false
+       },
+       {
+        "name": "rstAta",
+        "isMut": true,
+        "isSigner": false
+       },
+       {
+        "name": "rstMint",
+        "isMut": true,
+        "isSigner": false
+       },
+       {
+        "name": "vault",
+        "isMut": true,
+        "isSigner": false
+       },
+       {
+        "name": "pool",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "associatedTokenProgram",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "tokenProgram",
+        "isMut": false,
+        "isSigner": false
+       },
+       {
+        "name": "systemProgram",
+        "isMut": false,
+        "isSigner": false
+       }
+      ],
+      "args": [
+       {
+        "name": "amount",
+        "type": "u64"
+       }
+      ]
+     }
+   ],
+    "accounts": [
+     {
+      "name": "RestakingPool",
+      "type": {
+       "kind": "struct",
+       "fields": [
+        {
+         "name": "lstMint",
+         "type": "publicKey"
+        },
+        {
+         "name": "rstMint",
+         "type": "publicKey"
+        },
+        {
+         "name": "bump",
+         "type": "u8"
+        }
+       ]
+      }
+     }
+    ],
+    "errors": [
+     {
+      "code": 6000,
+      "name": "UnsupportedStakingAsset",
+      "msg": "Unsupported Staking Asset"
+     },
+     {
+      "code": 6001,
+      "name": "NonZeroRstMintSupply",
+      "msg": "The RST mint supply must be zero during initialization"
+     },
+     {
+      "code": 6002,
+      "name": "NonLiquidMint",
+      "msg": "This mint is not in the list of liquid mints"
+     }
+    ]
+   }
