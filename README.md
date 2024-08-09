@@ -27,16 +27,6 @@ Here's the Usage section for the README based on the restaking folder's `app.ts`
 
 The CLI tool to restake native SOL and unrestake (withdraw) sSOL into native SOL can be found in the `restaking` folder.
 
-### Restake SOL
-
-Restake native SOL:
-
-```
-yarn restaking restake <amount>
-```
-
-- `<amount>`: Amount of SOL to restake
-
 ### Partner Restake SOL
 
 To restake native SOL through the partner API, use the following command:

@@ -1,5 +1,4 @@
 import { Command, Option } from "commander";
-import { restake } from "./actions/restake_ssol";
 import { unrestake } from "./actions/unrestake_ssol";
 import { execSync } from "child_process";
 import { partner_restake } from "./actions/partner_restake_ssol";
@@ -33,13 +32,6 @@ program
     new Option("-k, --keypair <path-to-wallet-json-file>").default(keypairPath)
   )
   .addOption(new Option("-u, --url <url>").default(rpcUrl));
-
-program
-  .command("restake <amount>")
-  .description("Restaking native SOL")
-  .action(async (amount) => {
-    await restake(rpcUrl, keypairPath, amount);
-  });
 
 program
   .command("partnerRestake <amount> <referrer>")
