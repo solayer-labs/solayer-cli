@@ -16,14 +16,16 @@ import {
 
 
 /**
- * @param tokenAddress Pass in a token address for unretake
- * @param amount Number of restakes decimals is 9
+ * @param providerUrl Pass in the RPC provider URL E.g. Helius, Alchemy ...
+ * @param keyPairPath Pass in the path to your keypair .json file
+ * @param amount Define the amount of native SOL (in SOL) that the user will unstake
  */
 export async function unrestake(
     providerUrl: string,
     keyPairPath: string,
     amount: string
 ) {
+    // Set up the environment for the rest of the script
     const connection = new Connection(providerUrl, "confirmed");
     const signer = loadKeypairFromFile(keyPairPath);
     const keypair = new anchor.Wallet(
@@ -34,6 +36,7 @@ export async function unrestake(
     const provider = new anchor.AnchorProvider(connection, keypair, {});
     anchor.setProvider(provider);
 
+    // Adjust the compute budget so that the transaction goes through
     let tx = new anchor.web3.Transaction();
     tx.add(
         ComputeBudgetProgram.setComputeUnitLimit({
@@ -44,32 +47,39 @@ export async function unrestake(
         }),
     )
 
+    // Create the restaking program from its IDL file
     const restakeProgram = new anchor.Program(
         restakingProgramIDL as anchor.Idl, 
         RESTAKING_PROGRAM_ID
     );
 
+    // Define the accounts and derive the associated token account (ATA) addressses to call the unrestake method
     const pool = POOL_ADDRESS;
     const lstVault = getAssociatedTokenAddressSync(STAKE_POOL_MINT, pool, true);
     const rstMint = SSOL_MINT;
     const rstAta = getAssociatedTokenAddressSync(rstMint, provider.publicKey, true);
     const lstAta = getAssociatedTokenAddressSync(STAKE_POOL_MINT, provider.publicKey);
 
-    let unrestakeInstruction = await restakeProgram.methods.unrestake(convertFromDecimalBN(amount, 9)).accounts({
-        signer:                 keypair.publicKey,
-        lstMint:                STAKE_POOL_MINT,
-        rstMint:                rstMint,
-        solayerSigner:          SOLAYER_ADMIN_SIGNER,
-        pool,
-        vault:                  lstVault,
-        lstAta:                 lstAta,
-        rstAta:                 rstAta,
-        tokenProgram:           TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        systemProgram:          web3.SystemProgram.programId
-    }).instruction();
+    // Call the unrestake method on the restaking program
+    let unrestakeInstruction = await restakeProgram.methods
+        .unrestake(convertFromDecimalBN(amount, 9))
+        .accounts({
+            signer:                 keypair.publicKey,
+            lstMint:                STAKE_POOL_MINT,
+            rstMint:                rstMint,
+            solayerSigner:          SOLAYER_ADMIN_SIGNER,
+            pool,
+            vault:                  lstVault,
+            lstAta:                 lstAta,
+            rstAta:                 rstAta,
+            tokenProgram:           TOKEN_PROGRAM_ID,
+            associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+            systemProgram:          web3.SystemProgram.programId
+        })
+        .instruction();
     tx.add(unrestakeInstruction);
 
+    // Add an Approve instruction for the LST ATA for subsequent instructions
     let feePayerPublicKey = provider.publicKey;
     let approveInstruction = createApproveInstruction(
         lstAta,
@@ -98,9 +108,9 @@ export async function unrestake(
         /** Public key of the program to assign as the owner of the created account */
         programId: StakeProgram.programId,
     });
-
     tx.add(createAccountTransaction);
 
+    // Create the withdrawStake instruction to split and withdraw stake from the stake pool
     const withdrawStakeInstruction = StakePoolInstruction.withdrawStake({
         stakePool:          new PublicKey('po1osKDWYF9oiVEGmzKA4eTs8eMveFRMox3bUKazGN2'),
         validatorList:      new PublicKey('nk5E1Gc2rCuU2MDTRqdcQdiMfV9KnZ6JHykA1cTJQ56'),
@@ -114,8 +124,9 @@ export async function unrestake(
         poolMint:           STAKE_POOL_MINT, 
         poolTokens:         convertFromDecimalBN(amount, 9).toNumber(),
     });
-
     tx.add(withdrawStakeInstruction);
+
+    // Add a deactivate instruction to deactivate the stake account
     let deactivateInstruction = StakeProgram.deactivate({
         stakePubkey: stakeAccount.publicKey,
         authorizedPubkey: feePayerPublicKey
