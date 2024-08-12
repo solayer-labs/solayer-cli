@@ -8,7 +8,7 @@ Clone this repository and install the dependencies:
 
 ```
 git clone git@github.com:solayer-labs/solayer-cli.git
-cd create-avs
+cd solayer-cli
 yarn install
 ```
 
