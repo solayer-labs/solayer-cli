@@ -7,7 +7,7 @@ This repository contains TypeScript implementations for interacting with the Sol
 Clone this repository and install the dependencies:
 
 ```
-git clone git@github.com:solayer-labs/create-avs.git
+git clone git@github.com:solayer-labs/solayer-cli.git
 cd create-avs
 yarn install
 ```
