@@ -48,12 +48,16 @@ export async function unrestake(
     )
 
     // Create the restaking program from its IDL file
+    // RESTAKING_PROGRAM_ID: sSo1iU21jBrU9VaJ8PJib1MtorefUV4fzC9GURa2KNn
     const restakeProgram = new anchor.Program(
         restakingProgramIDL as anchor.Idl, 
         RESTAKING_PROGRAM_ID
     );
 
     // Define the accounts and derive the associated token account (ATA) addressses to call the unrestake method
+    // POOL_ADDRESS:    3sk58CzpitB9jsnVzZWwqeCn2zcXVherhALBh88Uw9GQ
+    // SSOL_MINT:       sSo14endRuUbvQaJS3dq36Q829a3A6BEfoeeRGJywEh
+    // STAKE_POOL_MINT: sSo1wxKKr6zW2hqf5hZrp2CawLibcwi1pMBqk5bg2G4
     const pool = POOL_ADDRESS;
     const lstVault = getAssociatedTokenAddressSync(STAKE_POOL_MINT, pool, true);
     const rstMint = SSOL_MINT;
@@ -79,7 +83,8 @@ export async function unrestake(
         .instruction();
     tx.add(unrestakeInstruction);
 
-    // Add an Approve instruction for the LST ATA for subsequent instructions
+    // Create an Approve instruction to access the LST’s associated token account to execute 
+    // subsequent operations to unstake the native SOL from our stake pool subsequent instructions
     let feePayerPublicKey = provider.publicKey;
     let approveInstruction = createApproveInstruction(
         lstAta,
@@ -96,6 +101,7 @@ export async function unrestake(
     //     )) + 50;
     let lamportsForStakeAccount = 2282880;
 
+    // Create a stake account to receive the user’s stake that is being withdrawn from our stake pool.
     let createAccountTransaction = web3.SystemProgram.createAccount({
         /** The account that will transfer lamports to the created account */
         fromPubkey: feePayerPublicKey,
@@ -126,7 +132,7 @@ export async function unrestake(
     });
     tx.add(withdrawStakeInstruction);
 
-    // Add a deactivate instruction to deactivate the stake account
+    // Add a deactivate instruction to deactivate the stake account so the user can withdraw their deposit
     let deactivateInstruction = StakeProgram.deactivate({
         stakePubkey: stakeAccount.publicKey,
         authorizedPubkey: feePayerPublicKey

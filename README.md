@@ -65,7 +65,7 @@ POOL_ADDRESS = new PublicKey("3sk58CzpitB9jsnVzZWwqeCn2zcXVherhALBh88Uw9GQ");
 SSOL_MINT = new PublicKey("sSo14endRuUbvQaJS3dq36Q829a3A6BEfoeeRGJywEh");
 STAKE_POOL_MINT = new PublicKey("sSo1wxKKr6zW2hqf5hZrp2CawLibcwi1pMBqk5bg2G4");
 ```
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L51-L80) for an example on how to call the `restakeProgram.methods.unrestake()` method to construct an unrestake instruction.
+Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L52-L84) for an example on how to call the `restakeProgram.methods.unrestake()` method to construct an unrestake instruction.
 
 2. Next, create an Approve instruction to access the LST’s associated token account to execute the other operations to unstake the native SOL from our stake pool:
 ```
@@ -76,24 +76,26 @@ let approveInstruction = createApproveInstruction(
     convertFromDecimalBN(amount, 9).toNumber(),
 )
 ```
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L83-L90) for an example.
+Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L88-L95) for an example.
 
 3. Then create a stake account to receive the user’s stake that is being withdrawn from our stake pool.
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L92-L111) for an example on how to create this stake account.
 
-5. Make the withdrawStake call to withdraw stake into the stake account we created. Here are the accounts that we’re using to create this instruction:
+Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L97-L117) for an example on how to create this stake account.
+
+4. Make the withdrawStake call to withdraw stake into the stake account we created. Here are the accounts that we’re using to create this instruction:
 ```
 stakePool:          new PublicKey('po1osKDWYF9oiVEGmzKA4eTs8eMveFRMox3bUKazGN2'),
 validatorList:      new PublicKey('nk5E1Gc2rCuU2MDTRqdcQdiMfV9KnZ6JHykA1cTJQ56'),
 withdrawAuthority:  new PublicKey('H5rmot8ejBUWzMPt6E44h27xj5obbSz3jVuK4AsJpHmv'),
 validatorStake:     new PublicKey('CpWqBteUJodiTcGYWsxq4WTaBPoZJyKkBbkWwAMXSyTK'),
 ```
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L114-L127) for an example on how to withdraw stake from the stake pool.
+Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L120-L133) for an example on how to withdraw stake from the stake pool.
 
-5. Deactivate the stake in the stake account so the user can withdraw their deposit.
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L129-L134) for an example on how to deactivate the stake account.
+5. Deactivate the stake account so the user can withdraw their deposit.
 
-7. Finally, let the user sign and confirm the transaction
+Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L136-L140) for an example on how to deactivate the stake account.
+
+6. Finally, let the user sign and confirm the transaction
 
 ### Restaking CLI Tool
 
