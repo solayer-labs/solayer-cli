@@ -19,8 +19,7 @@ const checkSolanaConfig = () => {
       keypairPath = keypairPathMatch[1].trim();
     }
   } catch (error) {
-    console.error("An error occurred:", error);
-    process.exit(1);
+    throw new Error(`Failed to retrieve Solana configuration: ${error.message}`);
   }
   return { rpcUrl, keypairPath };
 };
