@@ -21,12 +21,21 @@ import { DELEGATED_TOKEN_MINT_ID, PROGRAM_ID } from "../utils/constants";
 import { readFileSync } from "fs";
 import { EndoAvs } from "../utils/type";
 
+
+/**
+ * @param providerUrl Pass in the RPC provider URL E.g. Helius, Alchemy ...
+ * @param keyPairPath Pass in the path to your keypair .json file
+ * @param numberOfSOL Define the amount of sSOL that the user will delegate
+ * @param endoAvsAddress Pass in the address of the endoAVS account that was created by calling the create() method
+ */
 export async function delegate(
   providerUrl: string,
   keyPairPath: string,
   numberOfSOL: number,
   endoAvsAddress: string
 ) {
+
+  // Set up the environment for the rest of the script
   const connection = new Connection(providerUrl, "confirmed");
   const keypair = new anchor.Wallet(
     Keypair.fromSecretKey(
@@ -35,6 +44,8 @@ export async function delegate(
   );
   const provider = new anchor.AnchorProvider(connection, keypair, {});
   anchor.setProvider(provider);
+
+  // Create the endoAVS program from its IDL file
   const endoavsProgram = new anchor.Program(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
@@ -47,6 +58,8 @@ export async function delegate(
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
+
+    // Adjust the compute budget so that the transaction goes through
     const tx = new Transaction().add(
       ComputeBudgetProgram.setComputeUnitLimit({
         units: 1_000_000,
@@ -56,6 +69,7 @@ export async function delegate(
       })
     );
 
+    // Call the delegate method on the endoavs program and add the instruction to the transaction
     const delegateTx = await endoavsProgram.methods
       .delegate(new BN(numberOfSOL * LAMPORTS_PER_SOL))
       .accounts({
@@ -85,8 +99,9 @@ export async function delegate(
       })
       .signers([keypair.payer])
       .transaction();
-
     tx.add(delegateTx);
+
+    // Sign and send the transaction
     await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(
       helper.log
     );
@@ -95,12 +110,20 @@ export async function delegate(
   }
 }
 
+/**
+ * @param providerUrl Pass in the RPC provider URL E.g. Helius, Alchemy ...
+ * @param keyPairPath Pass in the path to your keypair .json file
+ * @param numberOfSOL Define the amount of sSOL that the user will undelegate
+ * @param endoAvsAddress Pass in the address of the endoAVS account that was created by calling the create() method
+ */
 export async function undelegate(
   providerUrl: string,
   keyPairPath: string,
   numberOfSOL: number,
   endoAvsAddress: string
 ) {
+
+  // Set up the environment for the rest of the script
   const connection = new Connection(providerUrl, "confirmed");
   const keypair = new anchor.Wallet(
     Keypair.fromSecretKey(
@@ -109,6 +132,8 @@ export async function undelegate(
   );
   const provider = new anchor.AnchorProvider(connection, keypair, {});
   anchor.setProvider(provider);
+
+  // Create the endoAVS program from its IDL file
   const endoavsProgram = new anchor.Program(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
@@ -121,6 +146,8 @@ export async function undelegate(
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
+
+    // Adjust the compute budget so that the transaction goes through
     const tx = new Transaction().add(
       ComputeBudgetProgram.setComputeUnitLimit({
         units: 1_000_000,
@@ -130,6 +157,7 @@ export async function undelegate(
       })
     );
 
+    // Call the undelegate method on the endoavs program and add the instruction to the transaction
     const undelegateTx = await endoavsProgram.methods
       .undelegate(new BN(numberOfSOL * LAMPORTS_PER_SOL))
       .accounts({
@@ -155,8 +183,9 @@ export async function undelegate(
       })
       .signers([keypair.payer])
       .transaction();
-
     tx.add(undelegateTx);
+
+    // Sign and send the transaction
     await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(
       helper.log
     );

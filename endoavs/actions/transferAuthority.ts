@@ -14,12 +14,21 @@ import { PROGRAM_ID } from "../utils/constants";
 import { readFileSync } from "fs";
 import { EndoAvs } from "../utils/type";
 
+
+/**
+ * @param providerUrl Pass in the RPC provider URL E.g. Helius, Alchemy ...
+ * @param keyPairPath Pass in the path to your keypair .json file
+ * @param newAuthorityAddr Define the new address that will hold authority over the endoAVS account
+ * @param endoAvsAddress Pass in the address of the endoAVS account that was created by calling the create() method
+ */
 export async function transferAuthority(
   providerUrl: string,
   keyPairPath: string,
   newAuthorityAddr: string,
   endoAvsAddress: string
 ) {
+
+  // Set up the environment for the rest of the script
   const connection = new Connection(providerUrl, "confirmed");
   const keypair = new anchor.Wallet(
     Keypair.fromSecretKey(
@@ -29,11 +38,11 @@ export async function transferAuthority(
   const provider = new anchor.AnchorProvider(connection, keypair, {});
   anchor.setProvider(provider);
 
+  // Create the endoAVS program from its IDL file
   const endoavsProgram = new anchor.Program(
     endoavsProgramIDL as anchor.Idl,
     PROGRAM_ID
   );
-
   const endoAvsPublicKey = new PublicKey(endoAvsAddress);
   const endoavsInfo = await endoavsProgram.account.endoAvs.fetch(
     endoAvsPublicKey
@@ -42,6 +51,8 @@ export async function transferAuthority(
   const avsTokenMintPublicKey = new PublicKey(endoAvsObj.avsTokenMint);
 
   try {
+
+    // Adjust the compute budget so that the transaction goes through
     const tx = new Transaction().add(
       ComputeBudgetProgram.setComputeUnitLimit({
         units: 1_000_000,
@@ -51,7 +62,8 @@ export async function transferAuthority(
       })
     );
 
-    // This will fail unless the signer is the authority holder
+    // Call the transferAuthority method on the endoavs program and add the instruction to the transaction
+    // NOTE: This will fail unless the signer is the authority holder
     const newAuthority = new PublicKey(newAuthorityAddr);
     const transferTx = await endoavsProgram.methods
       .transferAuthority()
@@ -65,8 +77,9 @@ export async function transferAuthority(
       })
       .signers([keypair.payer])
       .transaction();
-
     tx.add(transferTx);
+
+    // Sign and send the transaction
     await sendAndConfirmTransaction(connection, tx, [keypair.payer], {}).then(
       helper.log
     );
