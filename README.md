@@ -101,12 +101,18 @@ Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/ma
 
 The CLI tool to restake native SOL and unrestake (withdraw) sSOL into native SOL can be found in the `restaking` folder.
 
+Here's a simple command that you can use to start, which will prompt you for more information from the command line:
+```
+yarn restaking
+```
+
 #### 1. Partner Restake SOL
 
 To restake native SOL through the partner API endpoint, use the following command:
 
+Or define all of the parameters in one command:
 ```
-yarn restaking partnerRestake <amount> <referrer>
+yarn restaking --action=partnerRestake --amount=<amount> --referrer=<referrer>
 ```
 - `<amount>`: The amount of native SOL to restake
 - `<referrer>`: The partner's wallet address (referrer key) used to track referral stakes and calculate Solayer points
@@ -116,7 +122,7 @@ yarn restaking partnerRestake <amount> <referrer>
 Withdraw restaked native SOL:
 
 ```
-yarn restaking unrestake <amount>
+yarn restaking --action=unrestake --amount=<amount>
 ```
 
 - `<amount>`: Amount of SOL to unrestake

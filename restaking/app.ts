@@ -49,14 +49,14 @@ const main = async () => {
     case "partnerRestake":
       // If amount is not provided via CLI, prompt the user
       if (!amount) {
-        amount = (
+        amount = parseFloat((
           await prompts({
-            type: "number",
+            type: "text",
             name: "amount",
             message: "Enter the amount of SOL to restake:",
-            validate: (value) => value > 0 || "Amount must be greater than 0",
+            validate: (value) => parseFloat(value) > 0 || "Amount must be greater than 0",
           })
-        ).amount;
+        ).amount);
       }
 
       // If referrer is not provided via CLI, prompt the user
@@ -82,14 +82,14 @@ const main = async () => {
     case "unrestake":
       // If amount is not provided via CLI, prompt the user
       if (!amount) {
-        amount = (
+        amount = parseFloat((
           await prompts({
-            type: "number",
+            type: "text",
             name: "amount",
             message: "Enter the amount of SOL to unrestake:",
-            validate: (value) => value > 0 || "Amount must be greater than 0",
+            validate: (value) => parseFloat(value) > 0 || "Amount must be greater than 0",
           })
-        ).amount;
+        ).amount);
       }
 
       if (amount) {
