@@ -1,5 +1,7 @@
 import { unrestake } from "./actions/unrestake_ssol";
 import { partner_restake } from "./actions/partner_restake_ssol";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 import prompts from "prompts";
 import printLogo from "../utils/logo";
 import checkSolanaConfig from "../utils/solana-config";
@@ -8,58 +10,90 @@ const main = async () => {
   printLogo();
   const { rpcUrl, keypairPath } = await checkSolanaConfig();
 
-  const response = await prompts({
-    type: "select",
-    name: "value",
-    message: "What would you like to do?",
-    choices: [
-      { title: "Partner Restake", value: "partnerRestake" },
-      { title: "Unrestake", value: "unrestake" },
-    ],
-  });
+  const argv = yargs(hideBin(process.argv))
+    .option("action", {
+      alias: "a",
+      describe: "Action to perform",
+      choices: ["partnerRestake", "unrestake"],
+    })
+    .option("amount", {
+      alias: "amt",
+      describe: "Amount of SOL to restake or unrestake",
+      type: "number",
+    })
+    .option("referrer", {
+      alias: "r",
+      describe: "Referrer address for partner restake",
+      type: "string",
+    }).argv;
 
-  switch (response.value) {
+  // If no action is provided, prompt the user
+  const action =
+    argv.action ||
+    (
+      await prompts({
+        type: "select",
+        name: "action",
+        message: "What would you like to do?",
+        choices: [
+          { title: "Partner Restake", value: "partnerRestake" },
+          { title: "Unrestake", value: "unrestake" },
+        ],
+      })
+    ).action;
+
+  let amount = argv.amount;
+  let referrer = argv.referrer;
+
+  switch (action) {
     case "partnerRestake":
-      const amountResponse = await prompts({
-        type: "number",
-        name: "amount",
-        message: "Enter the amount of SOL to restake:",
-        validate: (value) => value > 0 || "Amount must be greater than 0",
-      });
+      // If amount is not provided via CLI, prompt the user
+      if (!amount) {
+        amount = (
+          await prompts({
+            type: "number",
+            name: "amount",
+            message: "Enter the amount of SOL to restake:",
+            validate: (value) => value > 0 || "Amount must be greater than 0",
+          })
+        ).amount;
+      }
 
-      const referrerResponse = await prompts({
-        type: "text",
-        name: "referrer",
-        message: "Enter the referrer address:",
-        validate: (value) => value.length > 0 || "Referrer address is required",
-      });
+      // If referrer is not provided via CLI, prompt the user
+      if (!referrer) {
+        referrer = (
+          await prompts({
+            type: "text",
+            name: "referrer",
+            message: "Enter the referrer address:",
+            validate: (value) =>
+              value.length > 0 || "Referrer address is required",
+          })
+        ).referrer;
+      }
 
-      if (amountResponse.amount && referrerResponse.referrer) {
-        await partner_restake(
-          rpcUrl,
-          keypairPath,
-          amountResponse.amount.toString(),
-          referrerResponse.referrer
-        );
+      if (amount && referrer) {
+        await partner_restake(rpcUrl, keypairPath, amount.toString(), referrer);
       } else {
         console.log("Operation cancelled or already in progress.");
       }
       break;
 
     case "unrestake":
-      const uRamountResponse = await prompts({
-        type: "number",
-        name: "amount",
-        message: "Enter the amount of SOL to restake:",
-        validate: (value) => value > 0 || "Amount must be greater than 0",
-      });
+      // If amount is not provided via CLI, prompt the user
+      if (!amount) {
+        amount = (
+          await prompts({
+            type: "number",
+            name: "amount",
+            message: "Enter the amount of SOL to unrestake:",
+            validate: (value) => value > 0 || "Amount must be greater than 0",
+          })
+        ).amount;
+      }
 
-      if (uRamountResponse.amount) {
-        await unrestake(
-          rpcUrl,
-          keypairPath,
-          uRamountResponse.amount.toString()
-        );
+      if (amount) {
+        await unrestake(rpcUrl, keypairPath, amount.toString());
       } else {
         console.log("Operation cancelled or already in progress.");
       }
