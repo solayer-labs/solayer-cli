@@ -262,8 +262,8 @@ Under the hood, calling the restake function will:
 
 ## Important Resources
 Links to IDL Files
- - Restaking Program:
- - EndoAVS Program:
+ - [Restaking Program](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/utils/restaking_program.json)
+ - [EndoAVS Program](https://github.com/solayer-labs/solayer-cli/blob/main/endoavs/utils/endoavs_program.json)
 
 Additional Parameters for Restaking Program
  - [Document Link](https://docs.google.com/document/d/1FWAKJS-eimrhqNu9uA6P-hP_pJ69wDl54ELQW5j45_U/edit#heading=h.yzvkhpaun3bj) 
