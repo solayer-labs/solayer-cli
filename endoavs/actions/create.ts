@@ -13,6 +13,7 @@ import {
   METADATA_PROGRAM_ID,
   PDA_SEED,
   PROGRAM_ID,
+  ENDOAVS_FEE_ADDRESS,
 } from "../utils/constants";
 import { readFileSync } from "fs";
 
@@ -73,6 +74,7 @@ export async function createAvs(
       .accounts({
         endoAvs:          endoavs,
         authority:        keypair.publicKey,
+        createFeeRecipient: ENDOAVS_FEE_ADDRESS,
         avsTokenMint:     avsTokenMint.publicKey,
         avsTokenMetadata: metaplex
           .nfts()
