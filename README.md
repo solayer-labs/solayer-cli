@@ -12,16 +12,6 @@ cd solayer-cli
 yarn install
 ```
 
-## Configuration
-
-By default, the script will use the same provider and key pair as specified by "solana config get". You can overwrite it by specifying `-k <path-to-wallet-json-file>` and `-u <provider-url>`
-
-```
-solayerAvs -k /path/to/keypair.json -u https://custom-rpc-url.com
-```
-
-If not specified, the CLI will use the default Solana configuration.
-
 ## Restaking
 
 The `restaking_program` is designed to handle the initialization, restaking, and un-restaking of tokens within the Solayer restaking marketplace. The program leverages several programs and accounts to manage these processes securely and efficiently.
@@ -98,10 +88,10 @@ Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/ma
 4. Make the withdrawStake call to withdraw stake into the stake account we created. Here are the accounts that we’re using to create this instruction:
 
 ```
-stakePool:          new PublicKey('po1osKDWYF9oiVEGmzKA4eTs8eMveFRMox3bUKazGN2'),
-validatorList:      new PublicKey('nk5E1Gc2rCuU2MDTRqdcQdiMfV9KnZ6JHykA1cTJQ56'),
-withdrawAuthority:  new PublicKey('H5rmot8ejBUWzMPt6E44h27xj5obbSz3jVuK4AsJpHmv'),
-validatorStake:     new PublicKey('CpWqBteUJodiTcGYWsxq4WTaBPoZJyKkBbkWwAMXSyTK'),
+stakePool:          po1osKDWYF9oiVEGmzKA4eTs8eMveFRMox3bUKazGN2
+validatorList:      nk5E1Gc2rCuU2MDTRqdcQdiMfV9KnZ6JHykA1cTJQ56
+withdrawAuthority:  H5rmot8ejBUWzMPt6E44h27xj5obbSz3jVuK4AsJpHmv
+validatorStake:     CpWqBteUJodiTcGYWsxq4WTaBPoZJyKkBbkWwAMXSyTK
 ```
 
 Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L120-L133) for an example on how to withdraw stake from the stake pool.
@@ -149,12 +139,17 @@ The endoAVS program provides functionality for creating, managing, and updating 
 
 The CLI tool to create and manage an endoAVS can be found in the `endoavs` folder.
 
+Here's a simple command that you can use to start, which will prompt you for more information from the command line:
+```
+yarn endoavs
+```
+
 ### Create EndoAVS
 
 Create a new endogenous AVS:
 
 ```
-yarn solayerAvs create <avsName> <avsTokenMintKeyPairPath>
+yarn endoavs --action=create --avsName=<avsName> --avsTokenMintKeyPairPath=<avsTokenMintKeyPairPath>
 ```
 
 - `<avsName>`: Name of the new AVS
@@ -165,7 +160,7 @@ yarn solayerAvs create <avsName> <avsTokenMintKeyPairPath>
 Delegate SOL to an endogenous AVS:
 
 ```
-yarn solayerAvs delegate <numberOfSOL> <endoAvsAddress>
+yarn endoavs --action=delegate --numberOfSOL=<numberOfSOL> --endoAvsAddress=<endoAvsAddress>
 ```
 
 - `<numberOfSOL>`: Amount of SOL to delegate
@@ -176,7 +171,7 @@ yarn solayerAvs delegate <numberOfSOL> <endoAvsAddress>
 Undelegate SOL from an endogenous AVS:
 
 ```
-yarn solayerAvs undelegate <numberOfSOL> <endoAvsAddress>
+yarn endoavs --action=undelegate --numberOfSOL=<numberOfSOL> --endoAvsAddress=<endoAvsAddress>
 ```
 
 - `<numberOfSOL>`: Amount of SOL to undelegate
@@ -187,7 +182,7 @@ yarn solayerAvs undelegate <numberOfSOL> <endoAvsAddress>
 Change the authority of your endoAVS:
 
 ```
-yarn solayerAvs transferAuthority <newAuthorityAddr> <endoAvsAddress>
+yarn endoavs --action=transferAuthority --newAuthorityAddr=<newAuthorityAddr> --endoAvsAddress=<endoAvsAddress>
 ```
 
 - `<newAuthorityAddr>`: Address of the new authority
@@ -198,7 +193,7 @@ yarn solayerAvs transferAuthority <newAuthorityAddr> <endoAvsAddress>
 Update the name and URL of your endoAVS:
 
 ```
-yarn solayerAvs updateAvs <newName> <newUrl> <endoAvsAddress>
+yarn endoavs --action=updateAvs --newName=<newName> --newUrl=<newUrl> --endoAvsAddress=<endoAvsAddress>
 ```
 
 - `<newName>`: New name for the AVS
@@ -210,7 +205,7 @@ yarn solayerAvs updateAvs <newName> <newUrl> <endoAvsAddress>
 Update or set token metadata for your endoAVS:
 
 ```
-yarn solayerAvs updateMetadata <name> <symbol> <uri> <endoAvsAddress>
+yarn endoavs --action=updateMetadata --name=<name> --symbol=<symbol> --uri=<uri> --endoAvsAddress=<endoAvsAddress>
 ```
 
 - `<name>`: Name for the token metadata
@@ -218,7 +213,6 @@ yarn solayerAvs updateMetadata <name> <symbol> <uri> <endoAvsAddress>
 - `<uri>`: URI for the token metadata
 - `<endoAvsAddress>`: Address of the endoAVS
 
-For all commands, you can use the `-h` or `--help` flag to get more information about the command and its arguments.
 
 ## Architecture and Technical Details
 
