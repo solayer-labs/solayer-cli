@@ -117,14 +117,14 @@ const main = async () => {
     case "undelegate":
       const numberOfSOL =
         argv.numberOfSOL ||
-        (
+        parseFloat((
           await prompts({
             type: "number",
             name: "numberOfSOL",
             message: `Enter the number of SOL to ${action}:`,
-            validate: (value) => value > 0 || "Amount must be greater than 0",
+            validate: (value) => parseFloat(value) > 0 || "Amount must be greater than 0",
           })
-        ).numberOfSOL;
+        ).numberOfSOL);
 
       const endoAvsAddress =
         argv.endoAvsAddress ||
