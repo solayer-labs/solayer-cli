@@ -1,50 +1,77 @@
-import { Command, Option } from "commander";
 import { unrestake } from "./actions/unrestake_ssol";
-import { execSync } from "child_process";
 import { partner_restake } from "./actions/partner_restake_ssol";
+import prompts from "prompts";
+import printLogo from "../utils/logo";
+import checkSolanaConfig from "../utils/solana-config";
 
-const program = new Command();
+const main = async () => {
+  printLogo();
+  const { rpcUrl, keypairPath } = await checkSolanaConfig();
 
-let rpcUrl = "https://api.mainnet-beta.solana.com";
-let keypairPath = "~/.config/solana/id.json";
-try {
-  const solanaConfig = execSync("solana config get", {
-    stdio: ["ignore", "pipe", "ignore"],
-  }).toString();
-
-  const rpcUrlMatch = solanaConfig.match(/RPC URL:\s*(.*)/);
-  const keypairPathMatch = solanaConfig.match(/Keypair Path:\s*(.*)/);
-
-  if (rpcUrlMatch) {
-    rpcUrl = rpcUrlMatch[1].trim();
-  }
-
-  if (keypairPathMatch) {
-    keypairPath = keypairPathMatch[1].trim();
-  }
-} catch (error) {}
-
-program
-  .version("0.0.1")
-  .description("CLI for interacting with the endoavs program");
-program
-  .addOption(
-    new Option("-k, --keypair <path-to-wallet-json-file>").default(keypairPath)
-  )
-  .addOption(new Option("-u, --url <url>").default(rpcUrl));
-
-program
-  .command("partnerRestake <amount> <referrer>")
-  .description("Restaking native SOL through partner API")
-  .action(async (amount, referrer) => {
-    await partner_restake(rpcUrl, keypairPath, amount, referrer);
+  const response = await prompts({
+    type: "select",
+    name: "value",
+    message: "What would you like to do?",
+    choices: [
+      { title: "Partner Restake", value: "partnerRestake" },
+      { title: "Unrestake", value: "unrestake" },
+    ],
   });
 
-program
-  .command("unrestake <amount>")
-  .description("Withdrawing restaked native SOL")
-  .action(async (amount) => {
-    await unrestake(rpcUrl, keypairPath, amount);
-  });
+  switch (response.value) {
+    case "partnerRestake":
+      const amountResponse = await prompts({
+        type: "number",
+        name: "amount",
+        message: "Enter the amount of SOL to restake:",
+        validate: (value) => value > 0 || "Amount must be greater than 0",
+      });
 
-program.parse(process.argv);
+      const referrerResponse = await prompts({
+        type: "text",
+        name: "referrer",
+        message: "Enter the referrer address:",
+        validate: (value) => value.length > 0 || "Referrer address is required",
+      });
+
+      if (amountResponse.amount && referrerResponse.referrer) {
+        await partner_restake(
+          rpcUrl,
+          keypairPath,
+          amountResponse.amount.toString(),
+          referrerResponse.referrer
+        );
+      } else {
+        console.log("Operation cancelled or already in progress.");
+      }
+      break;
+
+    case "unrestake":
+      const uRamountResponse = await prompts({
+        type: "number",
+        name: "amount",
+        message: "Enter the amount of SOL to restake:",
+        validate: (value) => value > 0 || "Amount must be greater than 0",
+      });
+
+      if (uRamountResponse.amount) {
+        await unrestake(
+          rpcUrl,
+          keypairPath,
+          uRamountResponse.amount.toString()
+        );
+      } else {
+        console.log("Operation cancelled or already in progress.");
+      }
+      break;
+
+    default:
+      console.log("Invalid option selected.");
+      break;
+  }
+};
+
+main().catch((error) => {
+  console.error("An error occurred:", error);
+  process.exit(1);
+});
