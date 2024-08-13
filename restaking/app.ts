@@ -1,50 +1,111 @@
-import { Command, Option } from "commander";
 import { unrestake } from "./actions/unrestake_ssol";
-import { execSync } from "child_process";
 import { partner_restake } from "./actions/partner_restake_ssol";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+import prompts from "prompts";
+import printLogo from "../utils/logo";
+import checkSolanaConfig from "../utils/solana-config";
 
-const program = new Command();
+const main = async () => {
+  printLogo();
+  const { rpcUrl, keypairPath } = await checkSolanaConfig();
 
-let rpcUrl = "https://api.mainnet-beta.solana.com";
-let keypairPath = "~/.config/solana/id.json";
-try {
-  const solanaConfig = execSync("solana config get", {
-    stdio: ["ignore", "pipe", "ignore"],
-  }).toString();
+  const argv = yargs(hideBin(process.argv))
+    .option("action", {
+      alias: "a",
+      describe: "Action to perform",
+      choices: ["partnerRestake", "unrestake"],
+    })
+    .option("amount", {
+      alias: "amt",
+      describe: "Amount of SOL to restake or unrestake",
+      type: "number",
+    })
+    .option("referrer", {
+      alias: "r",
+      describe: "Referrer address for partner restake",
+      type: "string",
+    }).argv;
 
-  const rpcUrlMatch = solanaConfig.match(/RPC URL:\s*(.*)/);
-  const keypairPathMatch = solanaConfig.match(/Keypair Path:\s*(.*)/);
+  // If no action is provided, prompt the user
+  const action =
+    argv.action ||
+    (
+      await prompts({
+        type: "select",
+        name: "action",
+        message: "What would you like to do?",
+        choices: [
+          { title: "Partner Restake", value: "partnerRestake" },
+          { title: "Unrestake", value: "unrestake" },
+        ],
+      })
+    ).action;
 
-  if (rpcUrlMatch) {
-    rpcUrl = rpcUrlMatch[1].trim();
+  let amount = argv.amount;
+  let referrer = argv.referrer;
+
+  switch (action) {
+    case "partnerRestake":
+      // If amount is not provided via CLI, prompt the user
+      if (!amount) {
+        amount = (
+          await prompts({
+            type: "number",
+            name: "amount",
+            message: "Enter the amount of SOL to restake:",
+            validate: (value) => value > 0 || "Amount must be greater than 0",
+          })
+        ).amount;
+      }
+
+      // If referrer is not provided via CLI, prompt the user
+      if (!referrer) {
+        referrer = (
+          await prompts({
+            type: "text",
+            name: "referrer",
+            message: "Enter the referrer address:",
+            validate: (value) =>
+              value.length > 0 || "Referrer address is required",
+          })
+        ).referrer;
+      }
+
+      if (amount && referrer) {
+        await partner_restake(rpcUrl, keypairPath, amount.toString(), referrer);
+      } else {
+        console.log("Operation cancelled or already in progress.");
+      }
+      break;
+
+    case "unrestake":
+      // If amount is not provided via CLI, prompt the user
+      if (!amount) {
+        amount = (
+          await prompts({
+            type: "number",
+            name: "amount",
+            message: "Enter the amount of SOL to unrestake:",
+            validate: (value) => value > 0 || "Amount must be greater than 0",
+          })
+        ).amount;
+      }
+
+      if (amount) {
+        await unrestake(rpcUrl, keypairPath, amount.toString());
+      } else {
+        console.log("Operation cancelled or already in progress.");
+      }
+      break;
+
+    default:
+      console.log("Invalid option selected.");
+      break;
   }
+};
 
-  if (keypairPathMatch) {
-    keypairPath = keypairPathMatch[1].trim();
-  }
-} catch (error) {}
-
-program
-  .version("0.0.1")
-  .description("CLI for interacting with the endoavs program");
-program
-  .addOption(
-    new Option("-k, --keypair <path-to-wallet-json-file>").default(keypairPath)
-  )
-  .addOption(new Option("-u, --url <url>").default(rpcUrl));
-
-program
-  .command("partnerRestake <amount> <referrer>")
-  .description("Restaking native SOL through partner API")
-  .action(async (amount, referrer) => {
-    await partner_restake(rpcUrl, keypairPath, amount, referrer);
-  });
-
-program
-  .command("unrestake <amount>")
-  .description("Withdrawing restaked native SOL")
-  .action(async (amount) => {
-    await unrestake(rpcUrl, keypairPath, amount);
-  });
-
-program.parse(process.argv);
+main().catch((error) => {
+  console.error("An error occurred:", error);
+  process.exit(1);
+});
