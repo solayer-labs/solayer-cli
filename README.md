@@ -6,8 +6,8 @@ This repository contains TypeScript implementations for interacting with Solayer
 Clone this repository and install the dependencies:
 
 ```
-git clone git@github.com:solayer-labs/create-avs.git
-cd create-avs
+git clone git@github.com:solayer-labs/solayer-cli.git
+cd solayer-cli
 yarn install
 ```
 
