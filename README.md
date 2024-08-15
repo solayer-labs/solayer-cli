@@ -234,13 +234,11 @@ User holds sSOL and accumulates points
 
 Here's a sample transaction to dive into how it's implemented - [Solscan Link ](https://solscan.io/tx/5cJ2eeBUjuugVhCLW7vys8usbcE73AS6WYwxQNdmgBJYoTpoi9w9KL54VBjpEZYuMeDkEaTVfzZozsVkx4ZfBjK)
 
-### restake function
+### Restake function
 
-Interact with our restaking program by calling the restake function to allow end users to restake a specified amount of tokens from the user into LRT tokens.
+Interact with our restaking program by calling the `restake` function to allow end users to restake a specified amount of tokens from the user into LRT tokens.
 
-As we are enforcing TVL targets as we run our staking epochs, LRT builders integrating with us will receive a dedicated URL/API keys (coming soon) that allows them to obtain a counter signature from the Solayer signer. This is because all staking deposit transactions interacting with the restaking program need to be co-signed by the Solayer signer before the deposit can be processed by the program. Access to the Solayer signer is provisioned by that API key.
-
-In the future, we will also offer additional APIs for retrieving points/badges corresponding to each staker’s account for our partners to display on their frontends.
+As we are enforcing TVL targets as we run our staking epochs, partners integrating with us can call the partner restaking API that allows them to obtain a counter signature from the Solayer signer. This is because all staking deposit transactions interacting with the restaking program need to be co-signed by the Solayer signer before the deposit can be processed by the program.
 
 Accounts: The restake function interacts with various accounts:
 
@@ -263,9 +261,9 @@ Under the hood, calling the restake function will:
 4. Mints the AVS token
 5. Locks the staking account again
 
-### unrestake function
+### Unrestake function
 
-Interact with our restaking program by calling the unrestake function to allow end users to withdraw a specified amount into the underlying LST or native SOL.
+Interact with our restaking program by calling the `unrestake` function to allow end users to withdraw a specified amount into the underlying LST or native SOL.
 
 Accounts: The `unrestake` function interacts with various accounts:
 
