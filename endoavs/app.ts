@@ -119,14 +119,14 @@ const main = async () => {
         argv.numberOfSOL ||
         parseFloat((
           await prompts({
-            type: "number",
+            type: "text",
             name: "numberOfSOL",
             message: `Enter the number of SOL to ${action}:`,
             validate: (value) => parseFloat(value) > 0 || "Amount must be greater than 0",
           })
         ).numberOfSOL);
 
-      const endoAvsAddress =
+      let endoAvsAddress =
         argv.endoAvsAddress ||
         (
           await prompts({
@@ -157,12 +157,24 @@ const main = async () => {
               value.length > 0 || "New authority address is required",
           })
         ).newAuthorityAddr;
+      
+      const endoAvsAddress_transferAuthority =
+        argv.endoAvsAddress ||
+        (
+          await prompts({
+            type: "text",
+            name: "endoAvsAddress",
+            message: "Enter the endoAvs address:",
+            validate: (value) =>
+              value.length > 0 || "endoAvs address is required",
+          })
+        ).endoAvsAddress;
 
       await transferAuthority(
         rpcUrl,
         keypairPath,
         newAuthorityAddr,
-        argv.endoAvsAddress
+        endoAvsAddress_transferAuthority
       );
       break;
 
@@ -188,13 +200,25 @@ const main = async () => {
             validate: (value) => value.length > 0 || "New AVS URL is required",
           })
         ).newUrl;
+      
+      const endoAvsAddress_updateAvs =
+        argv.endoAvsAddress ||
+        (
+          await prompts({
+            type: "text",
+            name: "endoAvsAddress",
+            message: "Enter the endoAvs address:",
+            validate: (value) =>
+              value.length > 0 || "endoAvs address is required",
+          })
+        ).endoAvsAddress;
 
       await updateAvs(
         rpcUrl,
         keypairPath,
         newName,
         newUrl,
-        argv.endoAvsAddress
+        endoAvsAddress_updateAvs
       );
       break;
 
@@ -231,6 +255,18 @@ const main = async () => {
             validate: (value) => value.length > 0 || "URI is required",
           })
         ).uri;
+      
+      const endoAvsAddress_meta =
+        argv.endoAvsAddress ||
+        (
+          await prompts({
+            type: "text",
+            name: "endoAvsAddress",
+            message: "Enter the endoAvs address:",
+            validate: (value) =>
+              value.length > 0 || "endoAvs address is required",
+          })
+        ).endoAvsAddress;
 
       await updateMetadata(
         rpcUrl,
@@ -238,7 +274,7 @@ const main = async () => {
         name,
         symbol,
         uri,
-        argv.endoAvsAddress
+        endoAvsAddress_meta
       );
       break;
 
