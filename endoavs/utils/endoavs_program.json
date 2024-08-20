@@ -16,6 +16,11 @@
           "isSigner": true
         },
         {
+          "name": "createFeeRecipient",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "avsTokenMint",
           "isMut": true,
           "isSigner": true
@@ -378,18 +383,26 @@
     },
     {
       "code": 6002,
+      "name": "CreateFeeRecipientMismatch",
+      "msg": "Wrong fee recipient address"
+    },
+    {
+      "code": 6003,
       "name": "URLTooLong",
       "msg": "The chosen url is too long"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "ConstraintViolation",
       "msg": "One of the constraints is violated"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "InvalidTokenSymbol",
       "msg": "The token symbol is invalid. It has to end with sSOL"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "GkMxw8ZJ3F5LytMiFJKefHdbpwSHgQkvGhNkbDexDBLS"
+  }
 }

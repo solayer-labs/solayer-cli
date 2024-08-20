@@ -3,7 +3,8 @@
   "scripts": {
     "build": "npx tsc",
     "restaking": "npx ts-node ./restaking/app.ts",
-    "endoavs": "npx ts-node ./endoavs/app.ts"
+    "endoavs": "npx ts-node ./endoavs/app.ts",
+    "info": "npx ts-node ./info/app.ts"
   },
   "license": "MIT",
   "dependencies": {
