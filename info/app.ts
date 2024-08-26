@@ -4,6 +4,7 @@ import prompts from "prompts";
 import printLogo from "../utils/logo";
 import checkSolanaConfig from "../utils/solana-config";
 import { getRestakingPoolMints } from "./actions/getIntegrations";
+import { getExchangeRatesSOL } from "./actions/getExchangeRate";
 
 const main = async () => {
   printLogo();
@@ -27,6 +28,7 @@ const main = async () => {
         message: "What would you like to do?",
         choices: [
           { title: "Get Restaking Pools", value: "getRestakingPools" },
+          { title: "Get sSOL Exchange Rate", value: "getExchangeRatesSOL"}
           // { title: "Get TVL in USD", value: "getTvlUsd" },
         ],
       })
@@ -35,6 +37,10 @@ const main = async () => {
   switch (action) {
     case "getRestakingPools":
         await getRestakingPoolMints(rpcUrl);
+        break;
+
+    case "getExchangeRatesSOL":
+        await getExchangeRatesSOL(rpcUrl);
         break;
 
     // case "getTvlSol":
