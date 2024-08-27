@@ -155,6 +155,12 @@ yarn endoavs --action=create --avsName=<avsName> --avsTokenMintKeyPairPath=<avsT
 - `<avsName>`: Name of the new AVS
 - `<avsTokenMintKeyPairPath>`: Path to the keypair file for the AVS token mint
 
+You can generate the keypair file for the AVS token mint, and even customize it as a vanity address that starts with the first few characters of your project's name. To create it, run the following command. Take not that token mints that have the first 5 or more characters take a very long time to generate.
+
+```
+solana-keygen grind --starts-with <First 2-5 characters go here>:1
+```
+
 ### Delegate
 
 Delegate SOL to an endogenous AVS:
