@@ -76,11 +76,6 @@
           "isSigner": true
         },
         {
-          "name": "solayerSigner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "lstMint",
           "isMut": false,
           "isSigner": false
@@ -159,11 +154,6 @@
           "name": "signer",
           "isMut": true,
           "isSigner": true
-        },
-        {
-          "name": "solayerSigner",
-          "isMut": false,
-          "isSigner": false
         },
         {
           "name": "lstMint",
@@ -346,8 +336,5 @@
       "name": "MintMismatch",
       "msg": "This mint does not match what is expected"
     }
-  ],
-  "metadata": {
-    "address": "DbMqfP67TxQTZySGZKTXaKRK2H7vdye23zQeyjuknbmJ"
-  }
+  ]
 }
