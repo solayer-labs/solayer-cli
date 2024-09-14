@@ -22,6 +22,7 @@ Do refer to the respective `README.md` files in the `restaking` and `endoavs` fo
 
 **!! Important !!**
 
+__________
 
 ## Restaking Process and Technical Details
 
@@ -47,12 +48,11 @@ Here's a sample transaction to dive into how it's implemented - [Solscan Link ](
 
 Interact with our restaking program by calling the `restake` function to allow end users to restake a specified amount of tokens from the user into LRT tokens.
 
-As we are enforcing TVL targets as we run our staking epochs, partners integrating with us can call the partner restaking API that allows them to obtain a counter signature from the Solayer signer. This is because all staking deposit transactions interacting with the restaking program need to be co-signed by the Solayer signer before the deposit can be processed by the program.
+Partners integrating with us can call the partner restaking API. This allows us to track the amount of stake referred from each of our partners, and be able to allocate incentives and delegations appropriately.
 
 Accounts: The restake function interacts with various accounts:
 
 - Signer (mutable, signer): The user or entity initiating the transaction
-- SolayerAdmin: An admin account for additional checks or balances
 - LST and LRT Mints: Token mints for the two types of tokens involved in restaking
 - lstAta, rstAta: User's token accounts for LST and RST tokens.
 - vault and pool: Accounts that hold tokens and manage state during operations.
