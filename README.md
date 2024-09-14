@@ -12,215 +12,18 @@ cd solayer-cli
 yarn install
 ```
 
-## Restaking
+## CLI Commands
 
-The `restaking_program` is designed to handle the initialization, restaking, and un-restaking of tokens within the Solayer restaking marketplace. The program leverages several programs and accounts to manage these processes securely and efficiently.
+**!! Important !!**
 
-### Integration Guide
+Do refer to the respective `README.md` files in the `restaking` and `endoavs` folders for the CLI commands to interact with our restaking and endoAVS programs: 
+ - [/restaking](https://github.com/solayer-labs/solayer-cli/restaking)
+ - [/endoavs](https://github.com/solayer-labs/solayer-cli/endoavs)
 
-#### Step 1: Build the UI for user deposits
+**!! Important !!**
 
-Partners can create a component or page that allows end-users to define how much native SOL to restake with Solayer, then click on a button to receive a signable transaction.
 
-Partners will be able to call our API endpoint to construct a transaction to stake native SOL to the Solayer restaking program. Each generated transaction will be constructed based on the amount and the address in the:
-
-- Endpoint: `https://app.solayer.org/api/partner/restake/ssol`
-- Parameters
-  - `amount` - the amount of native SOL that the user wishes to restake
-  - `staker` - the end-user’s wallet address
-  - `referrerkey` - your (the partner) wallet’s address that will be used to track referral stake and to calculate Solayer points
-
-Refer to the `getServerSignedTx()` function in [partner_restake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/partner_restake_ssol.ts#L12-L44) for an example on how to call the partner restaking API endpoint.
-
-The API will respond with a response body that has
-
-- `transaction` - base64 encoded serialized transaction
-- `message` - a message for errors or success messages
-- Successful responses will have a message of `“restaking {sol_amount} SOL for {sSOL_amount} sSOL”`
-
-From there, you can send the generated transaction signature to the user on the frontend to sign using their wallet E.g. Phantom.
-
-After the end-user has signed the transaction, they would have restaked native SOL and received Solayer SOL (sSOL) in their wallets. sSOL is liquid, and end users can [use sSOL DeFi applications](https://docs.solayer.org/ssol/ssol-in-defi) (E.g. liquidity pairs, collateral) or [delegate to AVSs](https://docs.solayer.org/endogenous-avs/delegate-tokens) to earn additional rewards.
-
-#### Step 2: Show User Balances
-
-Next, partners can show user balances by retrieving the balance of sSOL tokens that a user has in their wallet.
-
-To price sSOL to SOL, you can check our stake pool at [po1osKDWYF9oiVEGmzKA4eTs8eMveFRMox3bUKazGN2](https://solscan.io/account/po1osKDWYF9oiVEGmzKA4eTs8eMveFRMox3bUKazGN2).
-For example you can run this command to get details on our stake pool using the spl-stake-pool CLI. The conversion rate between sSOL and SOL (E.g. 1 sSOL = ~1.0148 SOL) can be found by dividing the total stake pool’s stake by the stake pool token supply.
-
-```
-spl-stake-pool list -v po1osKDWYF9oiVEGmzKA4eTs8eMveFRMox3bUKazGN2
-```
-
-#### Step 3: Handle withdrawals
-
-To allow users to withdraw their sSOL into native SOL, there are a couple of instructions that will need to be added to the constructed transaction:
-
-1. Connect to the Solana blockchain and call the unrestake method on our restaking program. Here are the accounts that are used to make this instruction:
-
-```
-RESTAKING_PROGRAM_ID = new PublicKey("sSo1iU21jBrU9VaJ8PJib1MtorefUV4fzC9GURa2KNn")
-POOL_ADDRESS = new PublicKey("3sk58CzpitB9jsnVzZWwqeCn2zcXVherhALBh88Uw9GQ");
-SSOL_MINT = new PublicKey("sSo14endRuUbvQaJS3dq36Q829a3A6BEfoeeRGJywEh");
-STAKE_POOL_MINT = new PublicKey("sSo1wxKKr6zW2hqf5hZrp2CawLibcwi1pMBqk5bg2G4");
-```
-
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L52-L84) for an example on how to call the `restakeProgram.methods.unrestake()` method to construct an unrestake instruction.
-
-2. Next, create an Approve instruction to access the LST’s associated token account to execute the other operations to unstake the native SOL from our stake pool:
-
-```
-let approveInstruction = createApproveInstruction(
-    lstAta,
-    feePayerPublicKey,
-    feePayerPublicKey,
-    convertFromDecimalBN(amount, 9).toNumber(),
-)
-```
-
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L88-L95) for an example.
-
-3. Then create a stake account to receive the user’s stake that is being withdrawn from our stake pool.
-
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L97-L117) for an example on how to create this stake account.
-
-4. Make the withdrawStake call to withdraw stake into the stake account we created. Here are the accounts that we’re using to create this instruction:
-
-```
-stakePool:          po1osKDWYF9oiVEGmzKA4eTs8eMveFRMox3bUKazGN2
-validatorList:      nk5E1Gc2rCuU2MDTRqdcQdiMfV9KnZ6JHykA1cTJQ56
-withdrawAuthority:  H5rmot8ejBUWzMPt6E44h27xj5obbSz3jVuK4AsJpHmv
-validatorStake:     CpWqBteUJodiTcGYWsxq4WTaBPoZJyKkBbkWwAMXSyTK
-```
-
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L120-L133) for an example on how to withdraw stake from the stake pool.
-
-5. Deactivate the stake account so the user can withdraw their deposit.
-
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L136-L140) for an example on how to deactivate the stake account.
-
-6. Finally, let the user sign and confirm the transaction
-
-### Restaking CLI Tool
-
-The CLI tool to restake native SOL and unrestake (withdraw) sSOL into native SOL can be found in the `restaking` folder.
-
-Here's a simple command that you can use to start, which will prompt you for more information from the command line:
-```
-yarn restaking
-```
-
-#### 1. Partner Restake SOL
-
-To restake native SOL through the partner API endpoint, use the following command:
-
-Or define all of the parameters in one command:
-```
-yarn restaking --action=partnerRestake --amount=<amount> --referrer=<referrer>
-```
-
-- `<amount>`: The amount of native SOL to restake
-- `<referrer>`: The partner's wallet address (referrer key) used to track referral stakes and calculate Solayer points
-
-#### 2. Unrestake SOL
-
-Withdraw restaked native SOL:
-
-```
-yarn restaking --action=unrestake --amount=<amount>
-```
-
-- `<amount>`: Amount of SOL to unrestake
-
-## EndoAVS
-
-The endoAVS program provides functionality for creating, managing, and updating endoAVS instances.
-
-The CLI tool to create and manage an endoAVS can be found in the `endoavs` folder.
-
-Here's a simple command that you can use to start, which will prompt you for more information from the command line:
-```
-yarn endoavs
-```
-
-### Create EndoAVS
-
-Create a new endogenous AVS:
-
-```
-yarn endoavs --action=create --avsName=<avsName> --avsTokenMintKeyPairPath=<avsTokenMintKeyPairPath>
-```
-
-- `<avsName>`: Name of the new AVS
-- `<avsTokenMintKeyPairPath>`: Path to the keypair file for the AVS token mint
-
-You can generate the keypair file for the AVS token mint, and even customize it as a vanity address that starts with the first few characters of your project's name. To create it, run the following command. Take not that token mints that have the first 5 or more characters take a very long time to generate.
-
-```
-solana-keygen grind --starts-with <First 2-5 characters go here>:1
-```
-
-### Delegate
-
-Delegate SOL to an endogenous AVS:
-
-```
-yarn endoavs --action=delegate --numberOfSOL=<numberOfSOL> --endoAvsAddress=<endoAvsAddress>
-```
-
-- `<numberOfSOL>`: Amount of SOL to delegate
-- `<endoAvsAddress>`: Address of the endoAVS
-
-### Undelegate
-
-Undelegate SOL from an endogenous AVS:
-
-```
-yarn endoavs --action=undelegate --numberOfSOL=<numberOfSOL> --endoAvsAddress=<endoAvsAddress>
-```
-
-- `<numberOfSOL>`: Amount of SOL to undelegate
-- `<endoAvsAddress>`: Address of the endoAVS
-
-### Transfer Authority
-
-Change the authority of your endoAVS:
-
-```
-yarn endoavs --action=transferAuthority --newAuthorityAddr=<newAuthorityAddr> --endoAvsAddress=<endoAvsAddress>
-```
-
-- `<newAuthorityAddr>`: Address of the new authority
-- `<endoAvsAddress>`: Address of the endoAVS
-
-### Update AVS
-
-Update the name and URL of your endoAVS:
-
-```
-yarn endoavs --action=updateAvs --newName=<newName> --newUrl=<newUrl> --endoAvsAddress=<endoAvsAddress>
-```
-
-- `<newName>`: New name for the AVS
-- `<newUrl>`: New URL for the AVS
-- `<endoAvsAddress>`: Address of the endoAVS
-
-### Update/Set Metadata
-
-Update or set token metadata for your endoAVS:
-
-```
-yarn endoavs --action=updateMetadata --name=<name> --symbol=<symbol> --uri=<uri> --endoAvsAddress=<endoAvsAddress>
-```
-
-- `<name>`: Name for the token metadata
-- `<symbol>`: Symbol for the token metadata
-- `<uri>`: URI for the token metadata
-- `<endoAvsAddress>`: Address of the endoAVS
-
-
-## Architecture and Technical Details
+## Restaking Process and Technical Details
 
 ### Deposit Process
 
@@ -296,6 +99,8 @@ Links to IDL Files
 
 - [Restaking Program](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/utils/restaking_program.json)
 - [EndoAVS Program](https://github.com/solayer-labs/solayer-cli/blob/main/endoavs/utils/endoavs_program.json)
+
+You can also learn more on the [Solayer website](https://solayer.org/) as well as our [docs](https://docs.solayer.org/)
 
 Additional Parameters for Restaking Program
 
