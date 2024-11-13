@@ -2,3 +2,5 @@
 node_modules
 dist
 keypair.json
+
+*.DS_Store

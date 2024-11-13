@@ -1,0 +1,1318 @@
+{
+  "version": "0.1.0",
+  "name": "usdc_pool_program",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "manager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "operator",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rateAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "usdcMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolUsdcMainVault",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolUsdcTokenAccountForWithdraw",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "susdMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSusdVault",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rwaTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolRwaTokenMainVault",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolRwaTokenAccountForDeposit",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "fee",
+          "type": {
+            "defined": "Fee"
+          }
+        },
+        {
+          "name": "tokeName",
+          "type": "string"
+        },
+        {
+          "name": "tokenSymbol",
+          "type": "string"
+        },
+        {
+          "name": "uri",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "updateSusdMetadata",
+      "accounts": [
+        {
+          "name": "manager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "susdMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "field",
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "updateSusdRate",
+      "accounts": [
+        {
+          "name": "rateAuthority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "susdMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "rate",
+          "type": "i16"
+        }
+      ]
+    },
+    {
+      "name": "deposit",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "usdcMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "signerUsdcTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolUsdcMainVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "susdMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "signerSusdVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "depositProof",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initiateBatchDeposit",
+      "accounts": [
+        {
+          "name": "operator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "usdcMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolUsdcMainVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rwaProtocolUsdcVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "resolveBatchDeposit",
+      "accounts": [
+        {
+          "name": "operator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rentRefundRecipient",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "susdMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rwaTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolRwaTokenMainVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolRwaTokenAccountForDeposit",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenTransferHookProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "openedenExtraMetasAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "openedenPauseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdraw",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "usdcMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "signerUsdcTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "susdMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "signerSusdVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSusdVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "withdrawProof",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initiateBatchWithdraw",
+      "accounts": [
+        {
+          "name": "operator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "usdcMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "susdMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rwaTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rwaProtocolRwaTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolRwaTokenMainVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenTransferHookProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "openedenExtraMetasAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "openedenPauseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "resolveBatchWithdraw",
+      "accounts": [
+        {
+          "name": "operator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rentRefundRecipient",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "usdcMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolUsdcMainVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolUsdcTokenAccountForWithdraw",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "susdMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolSusdVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateOpenedenInfo",
+      "accounts": [
+        {
+          "name": "manager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "pool",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "openedenInfo",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "allowedDriftNumerator",
+          "type": "u64"
+        },
+        {
+          "name": "allowedDriftDenominator",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "setFee",
+      "accounts": [
+        {
+          "name": "manager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "newRentRefundRecipient",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "numerator",
+          "type": "u64"
+        },
+        {
+          "name": "denominator",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "setOperator",
+      "accounts": [
+        {
+          "name": "manager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "newOperator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "setRateAuthority",
+      "accounts": [
+        {
+          "name": "manager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "newRateAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "collectFee",
+      "accounts": [
+        {
+          "name": "operator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "feeRecipient",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "susdMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "feeRecipientSusdTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "emergencyTransferRwaToken",
+      "accounts": [
+        {
+          "name": "manager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rwaTokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "poolRwaTokenAccountForDeposit",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destinationRwaTokenVault",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "openedenTransferHookProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "openedenExtraMetasAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "openedenPauseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram2022",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "DepositProof",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "nonce",
+            "type": "u64"
+          },
+          {
+            "name": "from",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "batchId",
+            "type": "u64"
+          },
+          {
+            "name": "userSusdVault",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OpenedenInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "rwaTokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "rwaTokenVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "rwaTokenVaultAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "usdcVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "usdcVaultAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "poolRwaTokenMainVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "poolRwaTokenAccountForDeposit",
+            "type": "publicKey"
+          },
+          {
+            "name": "poolUsdcTokenAccountForWithdraw",
+            "type": "publicKey"
+          },
+          {
+            "name": "transferHookProgram",
+            "type": "publicKey"
+          },
+          {
+            "name": "extraMetasAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "pauseAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "allowedDriftNumerator",
+            "type": "u64"
+          },
+          {
+            "name": "allowedDriftDenominator",
+            "type": "u64"
+          },
+          {
+            "name": "depositRwaTokenUsdcRatioNumerator",
+            "type": "u64"
+          },
+          {
+            "name": "depositRwaTokenUsdcRatioDenominator",
+            "type": "u64"
+          },
+          {
+            "name": "withdrawUsdcSusdTokenRatioNumerator",
+            "type": "u64"
+          },
+          {
+            "name": "withdrawUsdcSusdTokenRatioDenominator",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Pool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "manager",
+            "type": "publicKey"
+          },
+          {
+            "name": "operator",
+            "type": "publicKey"
+          },
+          {
+            "name": "rateAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "fee",
+            "type": {
+              "defined": "Fee"
+            }
+          },
+          {
+            "name": "poolCreationTimestampSeconds",
+            "type": "i64"
+          },
+          {
+            "name": "lastFeeCollectionTimestampSeconds",
+            "type": "i64"
+          },
+          {
+            "name": "usdcMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "poolUsdcMainVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "susdMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "poolSusdVault",
+            "type": "publicKey"
+          },
+          {
+            "name": "batchDepositStatus",
+            "type": {
+              "defined": "Status"
+            }
+          },
+          {
+            "name": "currentDepositId",
+            "type": "u64"
+          },
+          {
+            "name": "currentDepositUsdcAmount",
+            "type": "u64"
+          },
+          {
+            "name": "batchDepositRemainingUsdcAmount",
+            "type": "u64"
+          },
+          {
+            "name": "batchWithdrawStatus",
+            "type": {
+              "defined": "Status"
+            }
+          },
+          {
+            "name": "currentWithdrawId",
+            "type": "u64"
+          },
+          {
+            "name": "currentWithdrawSusdAmount",
+            "type": "u64"
+          },
+          {
+            "name": "batchWithdrawRemainingSusdAmount",
+            "type": "u64"
+          },
+          {
+            "name": "openedenInfo",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawProof",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "nonce",
+            "type": "u64"
+          },
+          {
+            "name": "from",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "batchId",
+            "type": "u64"
+          },
+          {
+            "name": "userUsdcVault",
+            "type": "publicKey"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "Fee",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "numerator",
+            "type": "u64"
+          },
+          {
+            "name": "denominator",
+            "type": "u64"
+          },
+          {
+            "name": "recipient",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Status",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Inactive"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "DepositEvent",
+      "fields": [
+        {
+          "name": "from",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "depositProof",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "InitiateBatchDepositEvent",
+      "fields": [
+        {
+          "name": "batchDepositId",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "InitiateBatchWithdrawEvent",
+      "fields": [
+        {
+          "name": "batchDepositId",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "susdAmount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "rwaTokenAmount",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "WithdrawEvent",
+      "fields": [
+        {
+          "name": "from",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "amount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "withdrawProof",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NonZeroSUsdMintSupply",
+      "msg": "The sUSD mint supply must be zero during initialization"
+    },
+    {
+      "code": 6001,
+      "name": "BatchDepositActive",
+      "msg": "The batch deposit is active because last batch is not fully handled"
+    },
+    {
+      "code": 6002,
+      "name": "BatchWithdrawActive",
+      "msg": "The batch withdraw is active because last batch is not fully handled"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidUSDCDepositAmount",
+      "msg": "The batch deposit USDC amount is 0"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidSUSDWithdrawAmount",
+      "msg": "The batch withdraw SUSD amount is 0"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidOwner",
+      "msg": "The owner is invalid"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidBatchId",
+      "msg": "The batch id must be current batch -1 and proof batch id must match the provided batch id"
+    },
+    {
+      "code": 6007,
+      "name": "InsufficientUSDCInVault",
+      "msg": "The pool usdc amount is less than the batch amount"
+    },
+    {
+      "code": 6008,
+      "name": "InsufficientRwaTokenInVault",
+      "msg": "The pool rwa token amount is less than the batch amount"
+    },
+    {
+      "code": 6009,
+      "name": "CalculationFailure",
+      "msg": "CalculationFailure"
+    },
+    {
+      "code": 6010,
+      "name": "LessThanExpected",
+      "msg": "The pool receives less than expected token"
+    },
+    {
+      "code": 6011,
+      "name": "MoreThanExpected",
+      "msg": "The pool receives more than expected token"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidAccountLength",
+      "msg": "The length for the remaining accounts needs to be even number"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidMint",
+      "msg": "The mint of provided token account is invalid"
+    },
+    {
+      "code": 6014,
+      "name": "OwnerMismatch",
+      "msg": "The owner of provided token account does not match the proof"
+    },
+    {
+      "code": 6015,
+      "name": "InvalidTokenAccountState",
+      "msg": "The state of provided token account is invalid"
+    },
+    {
+      "code": 6016,
+      "name": "InvalidSUSDMintAmount",
+      "msg": "The sUsd mint amount is invalid"
+    },
+    {
+      "code": 6017,
+      "name": "FeeTooHigh",
+      "msg": "The fee is too high"
+    },
+    {
+      "code": 6018,
+      "name": "TooManyRwaProtocols",
+      "msg": "Number of rwa protocols are above the threshold"
+    },
+    {
+      "code": 6019,
+      "name": "InvalidRangeDenominator",
+      "msg": "The range denominator can not be 0"
+    },
+    {
+      "code": 6020,
+      "name": "RangeTooWide",
+      "msg": "The range is too wide"
+    },
+    {
+      "code": 6021,
+      "name": "NonZeroRwaTokenInVault",
+      "msg": "The rwa token vault has non-zero amount"
+    },
+    {
+      "code": 6022,
+      "name": "NonZeroUsdcInVault",
+      "msg": "The usdc vault has non-zero amount"
+    },
+    {
+      "code": 6023,
+      "name": "InvalidRwaTokenMint",
+      "msg": "The rwa token mint is invalid"
+    },
+    {
+      "code": 6024,
+      "name": "InvalidAdapterProgram",
+      "msg": "The adapter program is invalid"
+    },
+    {
+      "code": 6025,
+      "name": "DuplicateRwaProtocol",
+      "msg": "The rwa protocol is duplicate"
+    },
+    {
+      "code": 6026,
+      "name": "InvalidStatus",
+      "msg": "the batch status is invalid"
+    },
+    {
+      "code": 6027,
+      "name": "InvalidAmount",
+      "msg": "The amount is invalid"
+    },
+    {
+      "code": 6028,
+      "name": "InvalidUserSUSDVault",
+      "msg": "The provided sUsd vault must match the one specified during deposit"
+    },
+    {
+      "code": 6029,
+      "name": "InvalidProofAccount",
+      "msg": "The provided proof account does not match the expected proof account"
+    },
+    {
+      "code": 6030,
+      "name": "AmountTooSmall",
+      "msg": "The amount is too small"
+    },
+    {
+      "code": 6031,
+      "name": "InvalidField",
+      "msg": "The input field is not supported"
+    },
+    {
+      "code": 6032,
+      "name": "BatchRemainingAmountNotZero",
+      "msg": "The batch remaining amount is not zero"
+    },
+    {
+      "code": 6033,
+      "name": "TooMuchRwaLeftover",
+      "msg": "Too much rwa token leftover after a batch deposit ends"
+    },
+    {
+      "code": 6034,
+      "name": "TooMuchUsdcLeftover",
+      "msg": "Too much usdc leftover after a batch withdraw ends"
+    }
+  ]
+}

@@ -4,7 +4,9 @@
     "build": "npx tsc",
     "restaking": "npx ts-node ./restaking/app.ts",
     "endoavs": "npx ts-node ./endoavs/app.ts",
-    "solayerinfo": "npx ts-node ./info/app.ts"
+    "susd": "npx ts-node ./susd/app.ts",
+    "solayerinfo": "npx ts-node ./info/app.ts",
+    "swqos": "npx ts-node ./swqos/app.ts"
   },
   "license": "MIT",
   "dependencies": {
@@ -14,6 +16,7 @@
     "@solana/spl-stake-pool": "1.1.5",
     "@solana/spl-token": "^0.4.3",
     "@solana/web3.js": "^1.95.2",
+    "axios": "^1.7.7",
     "bn.js": "^5.2.1",
     "chalk": "^4.1.0",
     "commander": "^12.1.0",
