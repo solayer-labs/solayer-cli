@@ -1,6 +1,6 @@
 # Solayer Labs CLI Tool
 
-This repository contains TypeScript implementations for interacting with Solayer Labs programs on Solana, such as the restaking program and endogenous AVS programs.
+This repository contains TypeScript implementations for interacting with Solayer Labs programs on Solana, such as the restaking, endogenous AVS (delegation) and sUSD programs. For more information about Solayer, you can also refer to our [docs](https://docs.solayer.org).
 
 ## Installation
 
@@ -16,9 +16,13 @@ yarn install
 
 **!! Important !!**
 
-Do refer to the respective `README.md` files in the `restaking` and `endoavs` folders for the CLI commands to interact with our restaking and endoAVS programs: 
+Do refer to the respective `README.md` files in the `restaking`, `endoavs` and `susd` folders for the CLI commands to interact with our restaking, endoAVS, and sUSD programs respectively: 
  - [/restaking](https://github.com/solayer-labs/solayer-cli/restaking)
  - [/endoavs](https://github.com/solayer-labs/solayer-cli/endoavs)
+ - [/susd](https://github.com/solayer-labs/solayer-cli/susd)
+
+We also have a folder that has sample code on how to retrieve information about Solayer, for example, the LSTs included in our restaking program or APY info
+ - [/info](https://github.com/solayer-labs/solayer-cli/info)
 
 **!! Important !!**
 
@@ -99,6 +103,7 @@ Links to IDL Files
 
 - [Restaking Program](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/utils/restaking_program.json)
 - [EndoAVS Program](https://github.com/solayer-labs/solayer-cli/blob/main/endoavs/utils/endoavs_program.json)
+- [sUSD Program](https://github.com/solayer-labs/solayer-cli/blob/main/endoavs/utils/susd_pool.json)
 
 You can also learn more on the [Solayer website](https://solayer.org/) as well as our [docs](https://docs.solayer.org/)
 
