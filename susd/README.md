@@ -4,7 +4,7 @@ The sUSD program acts as the interface for the users and protocol partners to in
 
 Before beginning, do read more about our terms of service and eligibility requirements [here](https://docs.solayer.org/susd/protocol-info/restrictions)
 
-The CLI tool and sample code for the sUSD protocol  be found in this `susd` folder.
+The CLI tool and sample code for the sUSD protocol be found in this `susd` folder.
 
 Do ensure that you have the project and dependencies set up correctly according to the main project's [README.md](https://github.com/solayer-labs/solayer-cli)
 
