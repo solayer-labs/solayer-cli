@@ -26,7 +26,7 @@ yarn susd --action=deposit --amount=<amount>
 ## Withdraw
 
 ```
-yarn endoavs --action=withdraw --amount=<amount>
+yarn susd --action=withdraw --amount=<amount>
 ```
 
 - `<amount>`: Amount of USDC to withdraw
