@@ -113,7 +113,7 @@ async function sendTransaction(
 async function waitForConfirmation(
   connection: Connection,
   signature: string,
-  maxAttempts: number = 5
+  maxAttempts: number = 10
 ): Promise<{ success: boolean; error?: string; confirmTimestamp?: number }> {
   let attempts = 0;
 
@@ -446,12 +446,20 @@ export async function benchmark(
         numTransactions) *
       100
     ).toFixed(2);
-    const improvement = (
+    const inclusionImprovement = (
       parseFloat(acceleratedSuccessRate) - parseFloat(standardSuccessRate)
     ).toFixed(2);
 
+    // Calculate improvement in mean time to inclusion
+    const acceleratedMeanTime = results[0].meanInclusionTime || 0;
+    const standardMeanTime = results[1].meanInclusionTime || 0;
+    const timeImprovement = standardMeanTime > 0
+      ? ((standardMeanTime - acceleratedMeanTime) / standardMeanTime * 100).toFixed(2)
+      : "N/A";
+
     console.log("\nComparison:");
-    console.log(`Improvement with acceleration: ${improvement}%`);
+    console.log(`Improvement in inclusion: ${inclusionImprovement}%`);
+    console.log(`Improvement in mean time to inclusion: ${timeImprovement}${timeImprovement !== "N/A" ? "%" : ""}`);
   } catch (error) {
     console.error("Benchmark failed:", error.message);
   }
