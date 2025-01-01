@@ -1,4 +1,5 @@
 import { unrestake } from "./actions/unrestake_ssol";
+import { blink_restake } from "./actions/blink";
 import { partner_restake } from "./actions/partner_restake_ssol";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -14,7 +15,7 @@ const main = async () => {
     .option("action", {
       alias: "a",
       describe: "Action to perform",
-      choices: ["partnerRestake", "unrestake"],
+      choices: ["blinkRestake", "partnerRestake", "unrestake"],
     })
     .option("amount", {
       alias: "amt",
@@ -36,6 +37,7 @@ const main = async () => {
         name: "action",
         message: "What would you like to do?",
         choices: [
+          { title: "Blink Restake", value: "blinkRestake" },
           { title: "Partner Restake", value: "partnerRestake" },
           { title: "Unrestake", value: "unrestake" },
         ],
@@ -46,6 +48,26 @@ const main = async () => {
   let referrer = argv.referrer;
 
   switch (action) {
+    case "blinkRestake":
+      // If amount is not provided via CLI, prompt the user
+      if (!amount) {
+        amount = parseFloat((
+          await prompts({
+            type: "text",
+            name: "amount",
+            message: "Enter the amount of SOL to restake:",
+            validate: (value) => parseFloat(value) > 0 || "Amount must be greater than 0",
+          })
+        ).amount);
+      }
+
+      if (amount) {
+        await blink_restake(rpcUrl, keypairPath, amount.toString());
+      } else {
+        console.log("Operation cancelled or already in progress.");
+      }
+      break;
+
     case "partnerRestake":
       // If amount is not provided via CLI, prompt the user
       if (!amount) {

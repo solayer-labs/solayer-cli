@@ -99,11 +99,20 @@ Here's a simple command that you can use to start, which will prompt you for mor
 yarn restaking
 ```
 
-### 1. Partner Restake SOL
+### 1. Blink Restake SOL
+
+To restake native SOL through the blink API endpoint, use the following command:
+
+```
+yarn restaking --action=blinkRestake --amount=<amount>
+```
+
+- `<amount>`: The amount of native SOL to restake
+
+### 2. Partner Restake SOL
 
 To restake native SOL through the partner API endpoint, use the following command:
 
-Or define all of the parameters in one command:
 ```
 yarn restaking --action=partnerRestake --amount=<amount> --referrer=<referrer>
 ```
@@ -111,7 +120,7 @@ yarn restaking --action=partnerRestake --amount=<amount> --referrer=<referrer>
 - `<amount>`: The amount of native SOL to restake
 - `<referrer>`: The partner's wallet address (referrer key) used to track referral stakes and calculate Solayer points
 
-### 2. Unrestake SOL
+### 3. Unrestake SOL
 
 Withdraw restaked native SOL:
 
