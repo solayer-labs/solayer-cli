@@ -16,10 +16,11 @@ yarn install
 
 **!! Important !!**
 
-Do refer to the respective `README.md` files in the `restaking`, `endoavs` and `susd` folders for the CLI commands to interact with our restaking, endoAVS, and sUSD programs respectively: 
+Do refer to the respective `README.md` files in the `restaking`, `endoavs`, `susd` and `swqos` folders for the CLI commands to interact with our restaking, endoAVS, and sUSD programs respectively: 
  - [/restaking](https://github.com/solayer-labs/solayer-cli/restaking)
  - [/endoavs](https://github.com/solayer-labs/solayer-cli/endoavs)
  - [/susd](https://github.com/solayer-labs/solayer-cli/susd)
+ - [/swqos](https://github.com/solayer-labs/solayer-cli/swqos)
 
 We also have a folder that has sample code on how to retrieve information about Solayer, for example, the LSTs included in our restaking program or APY info
  - [/info](https://github.com/solayer-labs/solayer-cli/info)
