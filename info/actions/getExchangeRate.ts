@@ -7,10 +7,7 @@ export async function getExchangeRatesSOL(
 ){
     const connection = new Connection(providerUrl, "confirmed");
     let info = await splStakePool.stakePoolInfo(connection, SOLAYER_RESTAKE_POOL);
-    let nativeSolStaked = info.details.reserveStakeLamports;
-    for(let i = 0; i < info.details.stakeAccounts.length; i++) {
-        nativeSolStaked += parseInt(info.details.stakeAccounts[i].validatorLamports);
-    }
+    let nativeSolStaked = info.details.totalLamports.toNumber();
     let lstSupply = parseInt(info.poolTokenSupply);
     let conversionRate = nativeSolStaked / lstSupply;
     console.log(`Conversion Rate: 1 sSOL = ${conversionRate} SOL`);
