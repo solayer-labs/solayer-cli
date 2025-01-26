@@ -23,7 +23,7 @@ Do refer to the respective `README.md` files in the `restaking`, `endoavs`, `sus
  - [/swqos](https://github.com/solayer-labs/solayer-cli/swqos)
 
 We also have a folder that has sample code on how to retrieve information about Solayer, for example, the LSTs included in our restaking program or APY info
- - [/info](https://github.com/solayer-labs/solayer-cli/info)
+ - [/info](https://github.com/solayer-labs/solayer-cli/tree/main/info)
 
 **!! Important !!**
 
