@@ -2,7 +2,7 @@
 
 The free public Stake-weighted Quality of Service (SWQoS) endpoint for Solana projects and builders
 
-We have also written an example benchmark program that submits transactions through our acceleration endpoint and compares performance against standard transaction processing through a RPC service of your choice.
+We have also written an example benchmark program that submits transactions through our acceleration endpoint and compares performance against standard transaction processing through an RPC service of your choice.
 
 The CLI tool for transaction acceleration and benchmarking can be found in the `swqos` folder.
 
