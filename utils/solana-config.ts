@@ -18,8 +18,22 @@ const checkSolanaConfig = () => {
     if (keypairPathMatch) {
       keypairPath = keypairPathMatch[1].trim();
     }
-  } catch (error) {
-    throw new Error(`Failed to retrieve Solana configuration: ${error.message}`);
+  } catch (error: unknown) {
+    let errorMessage: string;
+    if (error instanceof Error) {
+      const stderrOutput = (error as any).stderr
+        ? (error as any).stderr.toString()
+        : "";
+      errorMessage = stderrOutput
+        ? `${error.message}\nStderr: ${stderrOutput}`
+        : error.message;
+    } else {
+      errorMessage = String(error);
+    }
+    throw new Error(
+      `Failed to retrieve Solana configuration: ${errorMessage}`,
+      { cause: error }
+    );
   }
   return { rpcUrl, keypairPath };
 };
