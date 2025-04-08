@@ -54,7 +54,7 @@ export async function unrestake(
         RESTAKING_PROGRAM_ID
     );
 
-    // Define the accounts and derive the associated token account (ATA) addressses to call the unrestake method
+    // Define the accounts and derive the associated token account (ATA) addresses to call the unrestake method
     // POOL_ADDRESS:    3sk58CzpitB9jsnVzZWwqeCn2zcXVherhALBh88Uw9GQ
     // SSOL_MINT:       sSo14endRuUbvQaJS3dq36Q829a3A6BEfoeeRGJywEh
     // STAKE_POOL_MINT: sSo1wxKKr6zW2hqf5hZrp2CawLibcwi1pMBqk5bg2G4
