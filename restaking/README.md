@@ -84,7 +84,7 @@ Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/ma
 
 5. Deactivate the stake account so the user can withdraw their deposit.
 
-Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L136-L140) for an example on how to deactivate the stake account.
+Refer to [unrestake_ssol.ts](https://github.com/solayer-labs/solayer-cli/blob/main/restaking/actions/unrestake_ssol.ts#L136-L140) for an example of how to deactivate the stake account.
 
 6. Finally, let the user sign and confirm the transaction
 

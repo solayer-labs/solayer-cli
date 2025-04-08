@@ -49,7 +49,7 @@ const main = async () => {
 
   switch (action) {
     case "blinkRestake":
-      // If amount is not provided via CLI, prompt the user
+      // If the amount is not provided via CLI, prompt the user
       if (!amount) {
         amount = parseFloat((
           await prompts({
@@ -69,7 +69,7 @@ const main = async () => {
       break;
 
     case "partnerRestake":
-      // If amount is not provided via CLI, prompt the user
+      // If the amount is not provided via CLI, prompt the user
       if (!amount) {
         amount = parseFloat((
           await prompts({
@@ -81,7 +81,7 @@ const main = async () => {
         ).amount);
       }
 
-      // If referrer is not provided via CLI, prompt the user
+      // If the referrer is not provided via CLI, prompt the user
       if (!referrer) {
         referrer = (
           await prompts({
@@ -102,7 +102,7 @@ const main = async () => {
       break;
 
     case "unrestake":
-      // If amount is not provided via CLI, prompt the user
+      // If the amount is not provided via CLI, prompt the user
       if (!amount) {
         amount = parseFloat((
           await prompts({
