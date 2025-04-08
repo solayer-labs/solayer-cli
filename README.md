@@ -45,7 +45,7 @@ Stake pool mint (intermediate) is restaked into our restaking program (sSo1iU21j
 
 #### Step 3: Incentives
 
-User holds sSOL and accumulates points
+The user holds sSOL and accumulates points
 
 Here's a sample transaction to dive into how it's implemented - [Solscan Link ](https://solscan.io/tx/5cJ2eeBUjuugVhCLW7vys8usbcE73AS6WYwxQNdmgBJYoTpoi9w9KL54VBjpEZYuMeDkEaTVfzZozsVkx4ZfBjK)
 
@@ -89,7 +89,7 @@ Accounts: The `unrestake` function interacts with various accounts:
   - The Pool tracks the overall state and balances
 - TokenProgram, SystemProgram, AssociatedTokenProgram: Standard Solana programs required for token and system operations
 - Parameters:
-  - amount (u64): The amount of tokens to un-restake.
+  - amount (u64): The amount of tokens to unrestake.
 
 Under the hood, calling the restake function will:
 
