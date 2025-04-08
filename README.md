@@ -67,7 +67,7 @@ Accounts: The restake function interacts with various accounts:
 - Parameters:
   - amount (u64): The amount of LST tokens to restake.
 
-Under the hood, calling the restake function will:
+Under the hood, calling the unrestake function will:
 
 1. Check if the Solayer signer is a co-signer of the transaction
 2. Unlocks the restaking account
