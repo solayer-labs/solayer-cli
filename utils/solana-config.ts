@@ -37,8 +37,7 @@ const checkSolanaConfig = () => {
       errorMessage = String(error);
     }
     throw new Error(
-      `Failed to retrieve Solana configuration: ${errorMessage}`,
-      { cause: error }
+      `Failed to retrieve Solana configuration: ${errorMessage}`
     );
   }
   return { rpcUrl, keypairPath };
